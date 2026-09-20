@@ -1,0 +1,127 @@
+<PanelEmpleadoVista>:
+    md_bg_color: 0.95, 0.96, 0.96, 1
+
+    MDBoxLayout:
+        orientation: 'vertical'
+
+        # Toolbar Superior (Header)
+        MDTopAppBar:
+            title: "Panel del Empleado"
+            icon: "menu"
+            left_action_items: [["menu", lambda x: root.toggle_nav_drawer()]]
+            right_action_items: [["bell", lambda x: None], ["account-circle", lambda x: None]]
+            md_bg_color: 0.08, 0.45, 0.25, 1
+            specific_text_color: 1, 1, 1, 1
+
+        ScrollView:
+            MDBoxLayout:
+                orientation: 'vertical'
+                padding: dp(15)
+                spacing: dp(15)
+                adaptive_height: True
+
+                # Mensaje de Bienvenida
+                MDCard:
+                    orientation: 'vertical'
+                    padding: dp(15)
+                    spacing: dp(5)
+                    radius: [10,]
+                    elevation: 1
+                    adaptive_height: True
+
+                    MDLabel:
+                        text: "¡Bienvenido, Empleado!"
+                        font_style: "H6"
+                        bold: True
+                        theme_text_color: "Custom"
+                        text_color: 0.08, 0.45, 0.25, 1
+
+                    MDLabel:
+                        text: "Aquí puedes registrar entradas, salidas y consultar el inventario."
+                        font_style: "Body2"
+                        theme_text_color: "Hint"
+
+                # Métricas Rápidas (Stock, Avisos)
+                MDGridLayout:
+                    cols: 2
+                    spacing: dp(10)
+                    adaptive_height: True
+                    size_hint_y: None
+
+                    MDCard:
+                        padding: dp(15)
+                        orientation: 'vertical'
+                        radius: [10,]
+                        elevation: 1
+                        height: dp(100)
+                        size_hint_y: None
+
+                        MDLabel:
+                            text: "Total Productos"
+                            font_style: "Caption"
+                            theme_text_color: "Hint"
+                        MDLabel:
+                            text: "248"
+                            font_style: "H4"
+                            bold: True
+                            theme_text_color: "Custom"
+                            text_color: 0.08, 0.45, 0.25, 1
+
+                    MDCard:
+                        padding: dp(15)
+                        orientation: 'vertical'
+                        radius: [10,]
+                        elevation: 1
+                        height: dp(100)
+                        size_hint_y: None
+
+                        MDLabel:
+                            text: "Stock Bajo"
+                            font_style: "Caption"
+                            theme_text_color: "Hint"
+                        MDLabel:
+                            text: "18"
+                            font_style: "H4"
+                            bold: True
+                            theme_text_color: "Custom"
+                            text_color: 0.85, 0.35, 0.1, 1
+
+                # Acciones Rápidas
+                MDLabel:
+                    text: "Acciones Rápidas"
+                    font_style: "Subtitle1"
+                    bold: True
+
+                MDGridLayout:
+                    cols: 2
+                    spacing: dp(10)
+                    adaptive_height: True
+                    size_hint_y: None
+
+                    MDRaisedButton:
+                        text: "Registrar Entrada"
+                        icon: "package-down"
+                        md_bg_color: 0.08, 0.45, 0.25, 1
+                        size_hint_x: 1
+                        on_release: root.registrar_entrada()
+
+                    MDRaisedButton:
+                        text: "Registrar Salida"
+                        icon: "package-up"
+                        md_bg_color: 0.8, 0.2, 0.2, 1
+                        size_hint_x: 1
+                        on_release: root.registrar_salida()
+
+                    MDRaisedButton:
+                        text: "Escanear Producto"
+                        icon: "barcode-scan"
+                        md_bg_color: 0.15, 0.4, 0.6, 1
+                        size_hint_x: 1
+                        on_release: root.ir_a_escaner()
+
+                    MDRaisedButton:
+                        text: "Buscar Producto"
+                        icon: "magnify"
+                        md_bg_color: 0.4, 0.4, 0.4, 1
+                        size_hint_x: 1
+                        on_release: root.buscar_producto()
