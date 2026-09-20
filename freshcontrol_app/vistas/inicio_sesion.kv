@@ -2,10 +2,11 @@
     md_bg_color: 0.95, 0.96, 0.96, 1
 
     ScrollView:
+        do_scroll_x: False
         MDBoxLayout:
             orientation: 'vertical'
-            padding: [dp(20), dp(30), dp(20), dp(30)]
-            spacing: dp(20)
+            padding: [dp(20), dp(20), dp(20), dp(20)]
+            spacing: dp(15)
             size_hint_y: None
             height: self.minimum_height
             pos_hint: {"center_x": 0.5}
@@ -14,8 +15,8 @@
             MDBoxLayout:
                 orientation: 'vertical'
                 size_hint_y: None
-                height: self.minimum_height
-                spacing: dp(5)
+                height: dp(60)
+                spacing: dp(2)
 
                 MDLabel:
                     text: "FreshControl"
@@ -24,18 +25,22 @@
                     halign: "center"
                     theme_text_color: "Custom"
                     text_color: 0.08, 0.45, 0.25, 1
+                    size_hint_y: None
+                    height: dp(40)
 
                 MDLabel:
                     text: "Control inteligente de inventario"
                     font_style: "Caption"
                     halign: "center"
                     theme_text_color: "Hint"
+                    size_hint_y: None
+                    height: dp(18)
 
             # Tarjeta Formulario Principal
             MDCard:
                 orientation: 'vertical'
-                padding: dp(25)
-                spacing: dp(15)
+                padding: dp(20)
+                spacing: dp(12)
                 radius: [15,]
                 elevation: 2
                 size_hint_y: None
@@ -43,7 +48,8 @@
                 pos_hint: {"center_x": 0.5}
 
                 MDBoxLayout:
-                    adaptive_height: True
+                    size_hint_y: None
+                    height: dp(30)
                     spacing: dp(10)
                     pos_hint: {"center_x": 0.5}
 
@@ -57,25 +63,12 @@
                         text: "Iniciar Sesión"
                         font_style: "H6"
                         bold: True
-                        adaptive_height: True
-
-                MDLabel:
-                    text: "Usuario"
-                    font_style: "Caption"
-                    bold: True
-                    adaptive_height: True
 
                 MDTextField:
                     id: usuario_field
                     hint_text: "Ingrese su usuario"
                     icon_left: "account-outline"
                     mode: "rectangle"
-
-                MDLabel:
-                    text: "Contraseña"
-                    font_style: "Caption"
-                    bold: True
-                    adaptive_height: True
 
                 MDTextField:
                     id: password_field
@@ -92,11 +85,6 @@
                     size_hint_x: 1
                     elevation: 1
                     on_release: root.iniciar_sesion()
-
-                # Separador
-                MDWidget:
-                    size_hint_y: None
-                    height: dp(10)
 
                 MDRectangleFlatIconButton:
                     text: "Registrar como Gerente"
@@ -120,7 +108,7 @@
 
             # Pie de página
             MDCard:
-                padding: dp(15)
+                padding: dp(12)
                 radius: [10,]
                 elevation: 0
                 md_bg_color: 0.9, 0.94, 0.91, 1
@@ -128,25 +116,31 @@
                 height: self.minimum_height
 
                 MDBoxLayout:
-                    spacing: dp(15)
-                    adaptive_height: True
+                    spacing: dp(12)
+                    size_hint_y: None
+                    height: self.minimum_height
 
                     MDIcon:
                         icon: "shield-check"
-                        font_size: "28sp"
+                        font_size: "26sp"
                         theme_text_color: "Custom"
                         text_color: 0.08, 0.45, 0.25, 1
 
                     MDBoxLayout:
                         orientation: 'vertical'
-                        adaptive_height: True
+                        size_hint_y: None
+                        height: self.minimum_height
 
                         MDLabel:
                             text: "Acceso seguro al sistema"
                             font_style: "Subtitle2"
                             bold: True
+                            size_hint_y: None
+                            height: dp(18)
 
                         MDLabel:
                             text: "Solo usuarios autorizados"
                             font_style: "Caption"
                             theme_text_color: "Hint"
+                            size_hint_y: None
+                            height: dp(14)
