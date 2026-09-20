@@ -1,0 +1,164 @@
+<PanelGerenteVista>:
+    md_bg_color: 0.95, 0.96, 0.96, 1
+
+    MDBoxLayout:
+        orientation: 'vertical'
+
+        # Toolbar Superior
+        MDTopAppBar:
+            title: "Panel del Gerente"
+            left_action_items: [["menu", lambda x: root.toggle_nav_drawer()]]
+            right_action_items: [["bell", lambda x: None], ["account-circle", lambda x: None]]
+            md_bg_color: 0.08, 0.45, 0.25, 1
+            specific_text_color: 1, 1, 1, 1
+
+        ScrollView:
+            MDBoxLayout:
+                orientation: 'vertical'
+                padding: dp(15)
+                spacing: dp(15)
+                adaptive_height: True
+
+                # Tarjeta Bienvenida
+                MDCard:
+                    orientation: 'vertical'
+                    padding: dp(15)
+                    spacing: dp(5)
+                    radius: [10,]
+                    elevation: 1
+                    adaptive_height: True
+
+                    MDLabel:
+                        text: "¡Bienvenido, Gerente!"
+                        font_style: "H6"
+                        bold: True
+                        theme_text_color: "Custom"
+                        text_color: 0.08, 0.45, 0.25, 1
+
+                    MDLabel:
+                        text: "Aquí tienes el resumen general de tu inventario y operaciones."
+                        font_style: "Body2"
+                        theme_text_color: "Hint"
+
+                # Métricas Clave (Resumen de Inventario)
+                MDGridLayout:
+                    cols: 2
+                    spacing: dp(10)
+                    adaptive_height: True
+                    size_hint_y: None
+
+                    MDCard:
+                        padding: dp(12)
+                        orientation: 'vertical'
+                        radius: [10,]
+                        elevation: 1
+                        height: dp(90)
+                        size_hint_y: None
+
+                        MDLabel:
+                            text: "Total Productos"
+                            font_style: "Caption"
+                            theme_text_color: "Hint"
+                        MDLabel:
+                            text: "248"
+                            font_style: "H5"
+                            bold: True
+                            theme_text_color: "Custom"
+                            text_color: 0.08, 0.45, 0.25, 1
+
+                    MDCard:
+                        padding: dp(12)
+                        orientation: 'vertical'
+                        radius: [10,]
+                        elevation: 1
+                        height: dp(90)
+                        size_hint_y: None
+
+                        MDLabel:
+                            text: "Stock Bajo"
+                            font_style: "Caption"
+                            theme_text_color: "Hint"
+                        MDLabel:
+                            text: "18"
+                            font_style: "H5"
+                            bold: True
+                            theme_text_color: "Custom"
+                            text_color: 0.85, 0.35, 0.1, 1
+
+                    MDCard:
+                        padding: dp(12)
+                        orientation: 'vertical'
+                        radius: [10,]
+                        elevation: 1
+                        height: dp(90)
+                        size_hint_y: None
+
+                        MDLabel:
+                            text: "Por Vencer"
+                            font_style: "Caption"
+                            theme_text_color: "Hint"
+                        MDLabel:
+                            text: "26"
+                            font_style: "H5"
+                            bold: True
+                            theme_text_color: "Custom"
+                            text_color: 0.2, 0.5, 0.8, 1
+
+                    MDCard:
+                        padding: dp(12)
+                        orientation: 'vertical'
+                        radius: [10,]
+                        elevation: 1
+                        height: dp(90)
+                        size_hint_y: None
+
+                        MDLabel:
+                            text: "Vencidos"
+                            font_style: "Caption"
+                            theme_text_color: "Hint"
+                        MDLabel:
+                            text: "7"
+                            font_style: "H5"
+                            bold: True
+                            theme_text_color: "Custom"
+                            text_color: 0.8, 0.2, 0.2, 1
+
+                # Acciones Rápidas
+                MDLabel:
+                    text: "Acciones Rápidas"
+                    font_style: "Subtitle1"
+                    bold: True
+
+                MDGridLayout:
+                    cols: 2
+                    spacing: dp(10)
+                    adaptive_height: True
+                    size_hint_y: None
+
+                    MDRaisedButton:
+                        text: "Ver Inventario"
+                        icon: "store"
+                        md_bg_color: 0.08, 0.45, 0.25, 1
+                        size_hint_x: 1
+                        on_release: root.ver_inventario()
+
+                    MDRaisedButton:
+                        text: "Agregar Producto"
+                        icon: "plus-circle"
+                        md_bg_color: 0.08, 0.45, 0.25, 1
+                        size_hint_x: 1
+                        on_release: root.agregar_producto()
+
+                    MDRaisedButton:
+                        text: "Gestionar Empleados"
+                        icon: "account-group"
+                        md_bg_color: 0.15, 0.4, 0.6, 1
+                        size_hint_x: 1
+                        on_release: root.gestionar_empleados()
+
+                    MDRaisedButton:
+                        text: "Ver Reportes"
+                        icon: "chart-bar"
+                        md_bg_color: 0.4, 0.4, 0.4, 1
+                        size_hint_x: 1
+                        on_release: root.ver_reportes()
