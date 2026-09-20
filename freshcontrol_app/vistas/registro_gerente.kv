@@ -1,0 +1,106 @@
+<RegistroGerenteVista>:
+    md_bg_color: 0.95, 0.96, 0.96, 1
+
+    MDBoxLayout:
+        orientation: 'vertical'
+
+        # Barra superior con botón para regresar
+        MDTopAppBar:
+            title: "Registrar Gerente"
+            left_action_items: [["arrow-left", lambda x: root.ir_a_login()]]
+            md_bg_color: 0.08, 0.45, 0.25, 1
+            specific_text_color: 1, 1, 1, 1
+
+        ScrollView:
+            MDBoxLayout:
+                orientation: 'vertical'
+                padding: dp(20)
+                spacing: dp(12)
+                adaptive_height: True
+
+                # Tarjeta Contenedora
+                MDCard:
+                    orientation: 'vertical'
+                    padding: dp(20)
+                    spacing: dp(10)
+                    radius: [15,]
+                    elevation: 2
+                    adaptive_height: True
+
+                    MDIcon:
+                        icon: "crown"
+                        halign: "center"
+                        font_size: "36sp"
+                        theme_text_color: "Custom"
+                        text_color: 0.08, 0.45, 0.25, 1
+
+                    MDLabel:
+                        text: "Registro de Gerente"
+                        font_style: "H6"
+                        bold: True
+                        halign: "center"
+
+                    MDLabel:
+                        text: "Complete los datos del gerente"
+                        font_style: "Caption"
+                        halign: "center"
+                        theme_text_color: "Hint"
+
+                    MDTextField:
+                        id: nombre
+                        hint_text: "Nombre"
+                        icon_left: "account"
+                        mode: "rectangle"
+
+                    MDTextField:
+                        id: apellido
+                        hint_text: "Apellido"
+                        icon_left: "account-outline"
+                        mode: "rectangle"
+
+                    MDTextField:
+                        id: usuario
+                        hint_text: "Usuario"
+                        icon_left: "account-circle"
+                        mode: "rectangle"
+
+                    MDTextField:
+                        id: password
+                        hint_text: "Contraseña"
+                        icon_left: "lock"
+                        password: True
+                        mode: "rectangle"
+
+                    MDTextField:
+                        id: confirm_password
+                        hint_text: "Confirmar Contraseña"
+                        icon_left: "lock-check"
+                        password: True
+                        mode: "rectangle"
+
+                    MDTextField:
+                        id: email
+                        hint_text: "Correo Electrónico"
+                        icon_left: "email"
+                        mode: "rectangle"
+
+                    MDTextField:
+                        id: telefono
+                        hint_text: "Teléfono"
+                        icon_left: "phone"
+                        mode: "rectangle"
+
+                    MDRaisedButton:
+                        text: "Registrar Gerente"
+                        icon: "account-plus"
+                        md_bg_color: 0.08, 0.45, 0.25, 1
+                        pos_hint: {"center_x": .5}
+                        size_hint_x: 1
+                        on_release: root.guardar_gerente()
+
+                    MDFlatButton:
+                        text: "¿Ya tiene cuenta? Iniciar Sesión"
+                        theme_text_color: "Custom"
+                        text_color: 0.08, 0.45, 0.25, 1
+                        pos_hint: {"center_x": .5}
+                        on_release: root.ir_a_login()
