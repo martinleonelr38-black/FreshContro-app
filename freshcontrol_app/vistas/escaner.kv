@@ -1,0 +1,61 @@
+<EscanerVista>:
+    md_bg_color: 0.1, 0.1, 0.1, 1
+
+    MDBoxLayout:
+        orientation: 'vertical'
+
+        # Toolbar Superior
+        MDTopAppBar:
+            title: "Escanear Código de Barras"
+            left_action_items: [["arrow-left", lambda x: root.volver()]]
+            md_bg_color: 0.08, 0.45, 0.25, 1
+            specific_text_color: 1, 1, 1, 1
+
+        # Área de visor/cámara para el escáner
+        RelativeLayout:
+            MDCard:
+                size_hint: 0.8, 0.5
+                pos_hint: {"center_x": 0.5, "center_y": 0.5}
+                md_bg_color: 0.2, 0.2, 0.2, 0.8
+                radius: [15,]
+
+                MDBoxLayout:
+                    orientation: 'vertical'
+                    padding: dp(20)
+                    spacing: dp(15)
+
+                    MDIcon:
+                        icon: "barcode-scan"
+                        font_size: "72sp"
+                        halign: "center"
+                        theme_text_color: "Custom"
+                        text_color: 0.08, 0.7, 0.35, 1
+
+                    MDLabel:
+                        text: "Apunta la cámara al código de barras del producto"
+                        halign: "center"
+                        theme_text_color: "Custom"
+                        text_color: 1, 1, 1, 1
+                        font_style: "Body1"
+
+        # Acciones y simulación de lectura
+        MDBoxLayout:
+            orientation: 'vertical'
+            padding: dp(20)
+            spacing: dp(10)
+            adaptive_height: True
+
+            MDRaisedButton:
+                text: "Simular Lectura de Código"
+                icon: "camera"
+                md_bg_color: 0.08, 0.45, 0.25, 1
+                pos_hint: {"center_x": .5}
+                size_hint_x: 1
+                on_release: root.procesar_codigo()
+
+            MDFlatButton:
+                text: "Cancelar"
+                theme_text_color: "Custom"
+                text_color: 1, 1, 1, 1
+                pos_hint: {"center_x": .5}
+                on_release: root.volver()
