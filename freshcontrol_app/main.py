@@ -2,6 +2,7 @@ import os
 from kivymd.app import MDApp
 from kivymd.uix.screenmanager import MDScreenManager
 from kivymd.uix.screen import MDScreen
+from kivymd.uix.list import TwoLineIconListItem, IconLeftWidget
 from kivy.lang import Builder
 
 # Importar/Cargar los archivos .kv de la carpeta vistas
@@ -15,11 +16,34 @@ Builder.load_file(os.path.join(VISTAS_DIR, "panel_gerente.kv"))
 Builder.load_file(os.path.join(VISTAS_DIR, "escaner.kv"))
 
 
-# Definición de Clases para cada Pantalla
+# ==========================================
+# Pantalla: Inicio de Sesión
+# ==========================================
 class InicioSesionVista(MDScreen):
+    def toggle_password_visibility(self, button, field):
+        """Alterna la visibilidad del texto en el campo de contraseña."""
+        field.password = not field.password
+        button.icon = "eye" if not field.password else "eye-off"
+
     def iniciar_sesion(self):
-        # Lógica temporal de navegación
-        self.manager.current = "panel_gerente"
+        usuario = self.ids.usuario_field.text.strip()
+        password = self.ids.password_field.text.strip()
+        label_error = self.ids.mensaje_error
+
+        # Validación básica de campos vacíos
+        if not usuario or not password:
+            label_error.text = "Por favor ingrese usuario y contraseña"
+            return
+
+        # Control y derivación de roles (Simulación temporal de BD)
+        if usuario == "gerente" and password == "1234":
+            label_error.text = ""
+            self.manager.current = "panel_gerente"
+        elif usuario == "empleado" and password == "1234":
+            label_error.text = ""
+            self.manager.current = "panel_empleado"
+        else:
+            label_error.text = "Usuario o contraseña incorrectos"
 
     def ir_a_registro_gerente(self):
         self.manager.current = "registro_gerente"
@@ -28,15 +52,30 @@ class InicioSesionVista(MDScreen):
         self.manager.current = "registro_empleado"
 
 
+# ==========================================
+# Pantalla: Registro Gerente
+# ==========================================
 class RegistroGerenteVista(MDScreen):
+    def toggle_password_visibility(self, button, field):
+        field.password = not field.password
+        button.icon = "eye" if not field.password else "eye-off"
+
     def guardar_gerente(self):
+        # Redireccionar al login tras guardar
         self.manager.current = "inicio_sesion"
 
     def ir_a_login(self):
         self.manager.current = "inicio_sesion"
 
 
+# ==========================================
+# Pantalla: Registro Empleado
+# ==========================================
 class RegistroEmpleadoVista(MDScreen):
+    def toggle_password_visibility(self, button, field):
+        field.password = not field.password
+        button.icon = "eye" if not field.password else "eye-off"
+
     def guardar_empleado(self):
         self.manager.current = "inicio_sesion"
 
@@ -44,6 +83,9 @@ class RegistroEmpleadoVista(MDScreen):
         self.manager.current = "inicio_sesion"
 
 
+# ==========================================
+# Pantalla: Panel Empleado
+# ==========================================
 class PanelEmpleadoVista(MDScreen):
     def toggle_nav_drawer(self):
         pass
@@ -60,33 +102,47 @@ class PanelEmpleadoVista(MDScreen):
     def buscar_producto(self):
         pass
 
+    def cerrar_sesion(self):
+        self.manager.current = "inicio_sesion"
 
+
+# ==========================================
+# Pantalla: Panel Gerente
+# ==========================================
 class PanelGerenteVista(MDScreen):
     def toggle_nav_drawer(self):
         pass
 
     def ver_inventario(self):
-        pass
+        print("Navegando a Inventario...")
 
     def agregar_producto(self):
-        pass
+        print("Navegando a Agregar Producto...")
 
     def gestionar_empleados(self):
-        pass
+        print("Navegando a Gestión de Empleados...")
 
     def ver_reportes(self):
-        pass
+        self.manager.current = "escaner"
 
-
-class EscanerVista(MDScreen):
-    def procesar_codigo(self):
-        self.manager.current = "panel_empleado"
-
-    def volver(self):
+    def cerrar_sesion(self):
         self.manager.current = "inicio_sesion"
 
 
+# ==========================================
+# Pantalla: Escáner
+# ==========================================
+class EscanerVista(MDScreen):
+    def procesar_codigo(self):
+        self.manager.current = "panel_gerente"
+
+    def volver(self):
+        self.manager.current = "panel_gerente"
+
+
+# ==========================================
 # Aplicación Principal
+# ==========================================
 class FreshControlApp(MDApp):
     def build(self):
         self.theme_cls.primary_palette = "Green"
