@@ -1,0 +1,78 @@
+<InicioSesionVista>:
+    md_bg_color: 0.95, 0.96, 0.96, 1
+
+    MDBoxLayout:
+        orientation: 'vertical'
+        padding: dp(20)
+        spacing: dp(15)
+
+        # Header con Logo y Título
+        MDBoxLayout:
+            orientation: 'vertical'
+            adaptive_height: True
+            spacing: dp(5)
+
+            MDLabel:
+                text: "FreshControl"
+                font_style: "H4"
+                bold: True
+                halign: "center"
+                theme_text_color: "Custom"
+                text_color: 0.08, 0.45, 0.25, 1
+
+            MDLabel:
+                text: "Control inteligente de inventario"
+                font_style: "Caption"
+                halign: "center"
+                theme_text_color: "Hint"
+
+        # Tarjeta Formulario de Login
+        MDCard:
+            orientation: 'vertical'
+            padding: dp(20)
+            spacing: dp(15)
+            radius: [15,]
+            elevation: 2
+            size_hint_y: None
+            height: self.minimum_height
+
+            MDLabel:
+                text: "Iniciar Sesión"
+                font_style: "H6"
+                bold: True
+                halign: "center"
+
+            MDTextField:
+                id: usuario_field
+                hint_text: "Usuario"
+                icon_left: "account"
+                mode: "rectangle"
+
+            MDTextField:
+                id: password_field
+                hint_text: "Contraseña"
+                icon_left: "lock"
+                password: True
+                mode: "rectangle"
+
+            MDRaisedButton:
+                text: "Iniciar Sesión"
+                md_bg_color: 0.08, 0.45, 0.25, 1
+                pos_hint: {"center_x": .5}
+                size_hint_x: 1
+                on_release: root.iniciar_sesion()
+
+            MDRectangleFlatIconButton:
+                text: "Registrar como Gerente"
+                icon: "crown"
+                pos_hint: {"center_x": .5}
+                size_hint_x: 1
+                on_release: root.ir_a_registro_gerente()
+
+            MDRectangleFlatIconButton:
+                text: "Registrar como Empleado"
+                icon: "account-badge"
+                pos_hint: {"center_x": .5}
+                size_hint_x: 1
+                on_release: root.ir_a_registro_empleado()
+                
