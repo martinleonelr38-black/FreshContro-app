@@ -8,3 +8,12 @@ reportlab==4.0.4
 openpyxl==3.1.2
 pyzbar==0.1.9
 opencv-python-headless
+# para activar la version de python :
+py -3.11 -m venv venv
+
+Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope Process 
+
+ .\venv\Scripts\Activate.ps1 
+
+ python freshcontrol_app/main.py
+
