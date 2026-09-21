@@ -2,11 +2,24 @@ import os
 from kivymd.app import MDApp
 from kivymd.uix.screenmanager import MDScreenManager
 from kivymd.uix.screen import MDScreen
+from kivy.lang import Builder
+
+# Definir la ruta directa a la carpeta vistas
+VISTAS_DIR = os.path.join(os.path.dirname(__file__), "vistas")
+
+# Cargar explícitamente cada vista una sola vez
+Builder.load_file(os.path.join(VISTAS_DIR, "inicio_sesion.kv"))
+Builder.load_file(os.path.join(VISTAS_DIR, "registro_gerente.kv"))
+Builder.load_file(os.path.join(VISTAS_DIR, "registro_empleado.kv"))
+Builder.load_file(os.path.join(VISTAS_DIR, "panel_empleado.kv"))
+Builder.load_file(os.path.join(VISTAS_DIR, "panel_gerente.kv"))
+Builder.load_file(os.path.join(VISTAS_DIR, "escaner.kv"))
 
 
-class InicioSesionVista(MDScreen):
+# Usamos nombres de clase distintos al nombre del archivo para evitar el auto-load de Kivy
+class PantallaInicioSesion(MDScreen):
     def toggle_password_visibility(self, button, field):
-        """Alterna el estado de contraseña oculta/visible y cambia el ícono del ojo."""
+        """Alterna visibilidad de la contraseña con el ojito."""
         field.password = not field.password
         button.icon = "eye" if not field.password else "eye-off"
 
@@ -15,12 +28,12 @@ class InicioSesionVista(MDScreen):
         password = self.ids.password_field.text.strip()
         label_error = self.ids.mensaje_error
 
-        # 1. Validación de campos vacíos
+        # Control de campos vacíos
         if not usuario or not password:
             label_error.text = "Por favor ingrese usuario y contraseña"
             return
 
-        # 2. Control de credenciales y discriminación de roles
+        # Control y bloqueo de credenciales
         if usuario == "gerente" and password == "1234":
             label_error.text = ""
             self.ids.usuario_field.text = ""
@@ -32,7 +45,7 @@ class InicioSesionVista(MDScreen):
             self.ids.password_field.text = ""
             self.manager.current = "panel_empleado"
         else:
-            # Bloquea el ingreso y notifica al usuario
+            # Bloqueo por contraseña/usuario incorrecto
             label_error.text = "Usuario o contraseña incorrectos"
 
     def ir_a_registro_gerente(self):
@@ -46,7 +59,7 @@ class InicioSesionVista(MDScreen):
         self.manager.current = "registro_empleado"
 
 
-class RegistroGerenteVista(MDScreen):
+class PantallaRegistroGerente(MDScreen):
     def toggle_password_visibility(self, button, field):
         field.password = not field.password
         button.icon = "eye" if not field.password else "eye-off"
@@ -58,7 +71,7 @@ class RegistroGerenteVista(MDScreen):
         self.manager.current = "inicio_sesion"
 
 
-class RegistroEmpleadoVista(MDScreen):
+class PantallaRegistroEmpleado(MDScreen):
     def toggle_password_visibility(self, button, field):
         field.password = not field.password
         button.icon = "eye" if not field.password else "eye-off"
@@ -70,7 +83,7 @@ class RegistroEmpleadoVista(MDScreen):
         self.manager.current = "inicio_sesion"
 
 
-class PanelEmpleadoVista(MDScreen):
+class PantallaPanelEmpleado(MDScreen):
     def toggle_nav_drawer(self):
         pass
 
@@ -81,7 +94,7 @@ class PanelEmpleadoVista(MDScreen):
         self.manager.current = "inicio_sesion"
 
 
-class PanelGerenteVista(MDScreen):
+class PantallaPanelGerente(MDScreen):
     def toggle_nav_drawer(self):
         pass
 
@@ -101,7 +114,7 @@ class PanelGerenteVista(MDScreen):
         self.manager.current = "inicio_sesion"
 
 
-class EscanerVista(MDScreen):
+class PantallaEscaner(MDScreen):
     def procesar_codigo(self):
         self.manager.current = "panel_gerente"
 
@@ -114,22 +127,13 @@ class FreshControlApp(MDApp):
         self.theme_cls.primary_palette = "Green"
         self.theme_cls.theme_style = "Light"
 
-        from kivy.lang import Builder
-        vistas_dir = os.path.join(os.path.dirname(__file__), "vistas")
-
-        for archivo in ["inicio_sesion.kv", "registro_gerente.kv", "registro_empleado.kv", 
-                        "panel_empleado.kv", "panel_gerente.kv", "escaner.kv"]:
-            ruta = os.path.join(vistas_dir, archivo)
-            Builder.unload_file(ruta)
-            Builder.load_file(ruta)
-
         sm = MDScreenManager()
-        sm.add_widget(InicioSesionVista(name="inicio_sesion"))
-        sm.add_widget(RegistroGerenteVista(name="registro_gerente"))
-        sm.add_widget(RegistroEmpleadoVista(name="registro_empleado"))
-        sm.add_widget(PanelEmpleadoVista(name="panel_empleado"))
-        sm.add_widget(PanelGerenteVista(name="panel_gerente"))
-        sm.add_widget(EscanerVista(name="escaner"))
+        sm.add_widget(PantallaInicioSesion(name="inicio_sesion"))
+        sm.add_widget(PantallaRegistroGerente(name="registro_gerente"))
+        sm.add_widget(PantallaRegistroEmpleado(name="registro_empleado"))
+        sm.add_widget(PantallaPanelEmpleado(name="panel_empleado"))
+        sm.add_widget(PantallaPanelGerente(name="panel_gerente"))
+        sm.add_widget(PantallaEscaner(name="escaner"))
 
         return sm
 
