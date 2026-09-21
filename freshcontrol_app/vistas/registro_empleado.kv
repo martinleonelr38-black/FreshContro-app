@@ -1,4 +1,4 @@
-<RegistroEmpleadoVista>:
+<PantallaRegistroEmpleado>:
     md_bg_color: 0.95, 0.96, 0.96, 1
 
     ScrollView:
@@ -62,26 +62,35 @@
                         font_style: "H6"
                         bold: True
 
+                # Nombre
                 MDTextField:
                     id: nombre_field
-                    hint_text: "Nombre completo"
+                    hint_text: "Ingrese el nombre"
                     icon_left: "account-outline"
                     mode: "rectangle"
 
+                # Apellido
+                MDTextField:
+                    id: apellido_field
+                    hint_text: "Ingrese el apellido"
+                    icon_left: "account-outline"
+                    mode: "rectangle"
+
+                # Usuario
                 MDTextField:
                     id: usuario_field
-                    hint_text: "Usuario"
+                    hint_text: "Ingrese el usuario"
                     icon_left: "account-box-outline"
                     mode: "rectangle"
 
-                # Campo Contraseña con Ojito
+                # Contraseña
                 RelativeLayout:
                     size_hint_y: None
                     height: dp(60)
 
                     MDTextField:
                         id: password_field
-                        hint_text: "Contraseña"
+                        hint_text: "Ingrese la contraseña"
                         icon_left: "lock-outline"
                         password: True
                         mode: "rectangle"
@@ -93,9 +102,49 @@
                         theme_text_color: "Hint"
                         on_release: root.toggle_password_visibility(self, password_field)
 
+                # Confirmar Contraseña
+                RelativeLayout:
+                    size_hint_y: None
+                    height: dp(60)
+
+                    MDTextField:
+                        id: confirm_password_field
+                        hint_text: "Confirme la contraseña"
+                        icon_left: "lock-outline"
+                        password: True
+                        mode: "rectangle"
+                        pos_hint: {"center_x": 0.5, "center_y": 0.5}
+
+                    MDIconButton:
+                        icon: "eye-off"
+                        pos_hint: {"right": 0.98, "center_y": 0.4}
+                        theme_text_color: "Hint"
+                        on_release: root.toggle_password_visibility(self, confirm_password_field)
+
+                # Correo Electrónico
+                MDTextField:
+                    id: email_field
+                    hint_text: "Ingrese el correo electrónico"
+                    icon_left: "email-outline"
+                    mode: "rectangle"
+
+                # Teléfono
+                MDTextField:
+                    id: telefono_field
+                    hint_text: "Ingrese el teléfono"
+                    icon_left: "phone-outline"
+                    mode: "rectangle"
+
+                # Cargo / Puesto
+                MDTextField:
+                    id: cargo_field
+                    hint_text: "Ej: Cajero, Almacenero, Repositor"
+                    icon_left: "briefcase-outline"
+                    mode: "rectangle"
+
                 MDRaisedButton:
-                    text: "Guardar Registro"
-                    icon: "check-circle-outline"
+                    text: "Registrar Empleado"
+                    icon: "account-plus"
                     md_bg_color: 0.08, 0.45, 0.25, 1
                     pos_hint: {"center_x": .5}
                     size_hint_x: 1
