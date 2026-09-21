@@ -1,124 +1,113 @@
 <RegistroGerenteVista>:
     md_bg_color: 0.95, 0.96, 0.96, 1
 
-    MDBoxLayout:
-        orientation: 'vertical'
+    ScrollView:
+        do_scroll_x: False
+        MDBoxLayout:
+            orientation: 'vertical'
+            padding: [dp(20), dp(20), dp(20), dp(20)]
+            spacing: dp(15)
+            size_hint_y: None
+            height: self.minimum_height
+            pos_hint: {"center_x": 0.5}
 
-        MDTopAppBar:
-            title: "Registrar Gerente"
-            left_action_items: [["arrow-left", lambda x: root.ir_a_login()]]
-            md_bg_color: 0.08, 0.45, 0.25, 1
-            specific_text_color: 1, 1, 1, 1
-
-        ScrollView:
             MDBoxLayout:
                 orientation: 'vertical'
+                size_hint_y: None
+                height: dp(60)
+                spacing: dp(2)
+
+                MDLabel:
+                    text: "FreshControl"
+                    font_style: "H4"
+                    bold: True
+                    halign: "center"
+                    theme_text_color: "Custom"
+                    text_color: 0.08, 0.45, 0.25, 1
+                    size_hint_y: None
+                    height: dp(40)
+
+                MDLabel:
+                    text: "Registro de Gerente"
+                    font_style: "Caption"
+                    halign: "center"
+                    theme_text_color: "Hint"
+                    size_hint_y: None
+                    height: dp(18)
+
+            MDCard:
+                orientation: 'vertical'
                 padding: dp(20)
-                spacing: dp(15)
+                spacing: dp(12)
+                radius: [15,]
+                elevation: 2
                 size_hint_y: None
                 height: self.minimum_height
+                pos_hint: {"center_x": 0.5}
 
-                MDCard:
-                    orientation: 'vertical'
-                    padding: dp(20)
-                    spacing: dp(12)
-                    radius: [15,]
-                    elevation: 2
+                MDBoxLayout:
                     size_hint_y: None
-                    height: self.minimum_height
+                    height: dp(30)
+                    spacing: dp(10)
+                    pos_hint: {"center_x": 0.5}
 
                     MDIcon:
                         icon: "crown"
-                        halign: "center"
-                        font_size: "36sp"
+                        font_size: "24sp"
                         theme_text_color: "Custom"
                         text_color: 0.08, 0.45, 0.25, 1
 
                     MDLabel:
-                        text: "Registro de Gerente"
+                        text: "Crear Cuenta de Gerente"
                         font_style: "H6"
                         bold: True
-                        halign: "center"
-                        adaptive_height: True
 
-                    MDLabel:
-                        text: "Complete los datos del gerente"
-                        font_style: "Caption"
-                        halign: "center"
-                        theme_text_color: "Hint"
-                        adaptive_height: True
+                MDTextField:
+                    id: nombre_field
+                    hint_text: "Nombre completo"
+                    icon_left: "account-outline"
+                    mode: "rectangle"
 
-                    MDTextField:
-                        id: nombre
-                        hint_text: "Nombre"
-                        icon_left: "account"
-                        mode: "rectangle"
+                MDTextField:
+                    id: usuario_field
+                    hint_text: "Usuario"
+                    icon_left: "account-box-outline"
+                    mode: "rectangle"
 
-                    MDTextField:
-                        id: apellido
-                        hint_text: "Apellido"
-                        icon_left: "account-outline"
-                        mode: "rectangle"
+                # Campo Contraseña con Ojito
+                RelativeLayout:
+                    size_hint_y: None
+                    height: dp(60)
 
                     MDTextField:
-                        id: usuario
-                        hint_text: "Usuario"
-                        icon_left: "account-circle"
-                        mode: "rectangle"
-
-                    MDTextField:
-                        id: password
+                        id: password_field
                         hint_text: "Contraseña"
-                        icon_left: "lock"
+                        icon_left: "lock-outline"
                         password: True
                         mode: "rectangle"
+                        pos_hint: {"center_x": 0.5, "center_y": 0.5}
 
-                    MDTextField:
-                        id: confirm_password
-                        hint_text: "Confirmar Contraseña"
-                        icon_left: "lock-check"
-                        password: True
-                        mode: "rectangle"
+                    MDIconButton:
+                        icon: "eye-off"
+                        pos_hint: {"right": 0.98, "center_y": 0.4}
+                        theme_text_color: "Hint"
+                        on_release: root.toggle_password_visibility(self, password_field)
 
-                    MDTextField:
-                        id: email
-                        hint_text: "Correo Electrónico"
-                        icon_left: "email"
-                        mode: "rectangle"
+                MDRaisedButton:
+                    text: "Guardar Registro"
+                    icon: "check-circle-outline"
+                    md_bg_color: 0.08, 0.45, 0.25, 1
+                    pos_hint: {"center_x": .5}
+                    size_hint_x: 1
+                    elevation: 1
+                    on_release: root.guardar_gerente()
 
-                    MDTextField:
-                        id: telefono
-                        hint_text: "Teléfono"
-                        icon_left: "phone"
-                        mode: "rectangle"
-
-                    MDRaisedButton:
-                        text: "Registrar Gerente"
-                        icon: "account-plus"
-                        md_bg_color: 0.08, 0.45, 0.25, 1
-                        pos_hint: {"center_x": .5}
-                        size_hint_x: 1
-                        on_release: root.guardar_gerente()
-
-                    MDFlatButton:
-                        text: "¿Ya tiene cuenta? Iniciar Sesión"
-                        theme_text_color: "Custom"
-                        text_color: 0.08, 0.45, 0.25, 1
-                        pos_hint: {"center_x": .5}
-                        on_release: root.ir_a_login()
-                        RelativeLayout:
-    size_hint_y: None
-    height: dp(60)
-
-    MDTextField:
-        id: password_field
-        hint_text: "Cree su contraseña"
-        icon_left: "lock-outline"
-        password: True
-        mode: "rectangle"
-
-    MDIconButton:
-        icon: "eye-off"
-        pos_hint: {"right": 0.98, "center_y": 0.4}
-        theme_text_color: "Hint"
-        on_release: root.toggle_password_visibility(self, password_field)
+                MDRectangleFlatIconButton:
+                    text: "Volver al Inicio de Sesión"
+                    icon: "arrow-left"
+                    line_color: 0.08, 0.45, 0.25, 1
+                    icon_color: 0.08, 0.45, 0.25, 1
+                    text_color: 0.08, 0.45, 0.25, 1
+                    pos_hint: {"center_x": .5}
+                    size_hint_x: 1
+                    on_release: root.ir_a_login()
