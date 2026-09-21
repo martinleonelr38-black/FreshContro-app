@@ -2,24 +2,11 @@ import os
 from kivymd.app import MDApp
 from kivymd.uix.screenmanager import MDScreenManager
 from kivymd.uix.screen import MDScreen
-from kivymd.uix.list import TwoLineIconListItem, IconLeftWidget
-from kivy.lang import Builder
-
-# Cargar cada vista una sola vez especificando la ruta exacta
-VISTAS_DIR = os.path.join(os.path.dirname(__file__), "vistas")
-
-# Usamos Builder.load_file para Registrar las reglas Kivy
-Builder.load_file(os.path.join(VISTAS_DIR, "inicio_sesion.kv"))
-Builder.load_file(os.path.join(VISTAS_DIR, "registro_gerente.kv"))
-Builder.load_file(os.path.join(VISTAS_DIR, "registro_empleado.kv"))
-Builder.load_file(os.path.join(VISTAS_DIR, "panel_empleado.kv"))
-Builder.load_file(os.path.join(VISTAS_DIR, "panel_gerente.kv"))
-Builder.load_file(os.path.join(VISTAS_DIR, "escaner.kv"))
 
 
 class InicioSesionVista(MDScreen):
     def toggle_password_visibility(self, button, field):
-        """Alterna visibilidad de contraseña con el ícono de ojo."""
+        """Alterna el estado de contraseña oculta/visible y cambia el ícono del ojo."""
         field.password = not field.password
         button.icon = "eye" if not field.password else "eye-off"
 
@@ -28,15 +15,14 @@ class InicioSesionVista(MDScreen):
         password = self.ids.password_field.text.strip()
         label_error = self.ids.mensaje_error
 
-        # Control de campos vacíos
+        # 1. Validación de campos vacíos
         if not usuario or not password:
             label_error.text = "Por favor ingrese usuario y contraseña"
             return
 
-        # Control estricto de credenciales y roles
+        # 2. Control de credenciales y discriminación de roles
         if usuario == "gerente" and password == "1234":
             label_error.text = ""
-            # Limpiar campos al entrar
             self.ids.usuario_field.text = ""
             self.ids.password_field.text = ""
             self.manager.current = "panel_gerente"
@@ -46,8 +32,18 @@ class InicioSesionVista(MDScreen):
             self.ids.password_field.text = ""
             self.manager.current = "panel_empleado"
         else:
-            # Si los datos no coinciden exactamente, BLOQUEA el acceso y muestra el error
+            # Bloquea el ingreso y notifica al usuario
             label_error.text = "Usuario o contraseña incorrectos"
+
+    def ir_a_registro_gerente(self):
+        if hasattr(self.ids, 'mensaje_error'):
+            self.ids.mensaje_error.text = ""
+        self.manager.current = "registro_gerente"
+
+    def ir_a_registro_empleado(self):
+        if hasattr(self.ids, 'mensaje_error'):
+            self.ids.mensaje_error.text = ""
+        self.manager.current = "registro_empleado"
 
 
 class RegistroGerenteVista(MDScreen):
@@ -118,8 +114,16 @@ class FreshControlApp(MDApp):
         self.theme_cls.primary_palette = "Green"
         self.theme_cls.theme_style = "Light"
 
+        from kivy.lang import Builder
+        vistas_dir = os.path.join(os.path.dirname(__file__), "vistas")
+
+        for archivo in ["inicio_sesion.kv", "registro_gerente.kv", "registro_empleado.kv", 
+                        "panel_empleado.kv", "panel_gerente.kv", "escaner.kv"]:
+            ruta = os.path.join(vistas_dir, archivo)
+            Builder.unload_file(ruta)
+            Builder.load_file(ruta)
+
         sm = MDScreenManager()
-        # Se instancian las pantallas asignando sus nombres únicos
         sm.add_widget(InicioSesionVista(name="inicio_sesion"))
         sm.add_widget(RegistroGerenteVista(name="registro_gerente"))
         sm.add_widget(RegistroEmpleadoVista(name="registro_empleado"))

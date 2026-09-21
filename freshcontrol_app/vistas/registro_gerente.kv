@@ -106,3 +106,19 @@
                         text_color: 0.08, 0.45, 0.25, 1
                         pos_hint: {"center_x": .5}
                         on_release: root.ir_a_login()
+                        RelativeLayout:
+    size_hint_y: None
+    height: dp(60)
+
+    MDTextField:
+        id: password_field
+        hint_text: "Cree su contraseña"
+        icon_left: "lock-outline"
+        password: True
+        mode: "rectangle"
+
+    MDIconButton:
+        icon: "eye-off"
+        pos_hint: {"right": 0.98, "center_y": 0.4}
+        theme_text_color: "Hint"
+        on_release: root.toggle_password_visibility(self, password_field)

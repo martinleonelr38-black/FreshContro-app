@@ -11,7 +11,7 @@
             height: self.minimum_height
             pos_hint: {"center_x": 0.5}
 
-            # Encabezado Logo
+            # Encabezado (Logo + Subtítulo)
             MDBoxLayout:
                 orientation: 'vertical'
                 size_hint_y: None
@@ -36,7 +36,7 @@
                     size_hint_y: None
                     height: dp(18)
 
-            # Tarjeta de Formulario
+            # Tarjeta de Formulario Principal
             MDCard:
                 orientation: 'vertical'
                 padding: dp(20)
@@ -64,7 +64,7 @@
                         font_style: "H6"
                         bold: True
 
-                # Mensaje de Error (Vacío por defecto)
+                # Mensaje de Error (Respuesta Visual ante Bloqueo)
                 MDLabel:
                     id: mensaje_error
                     text: ""
@@ -76,7 +76,6 @@
                     size_hint_y: None
                     height: dp(20) if self.text else 0
 
-                # Campo Usuario
                 MDTextField:
                     id: usuario_field
                     hint_text: "Ingrese su usuario"
@@ -130,3 +129,42 @@
                     pos_hint: {"center_x": .5}
                     size_hint_x: 1
                     on_release: root.ir_a_registro_empleado()
+
+            # Pie de página informativo
+            MDCard:
+                padding: dp(12)
+                radius: [10,]
+                elevation: 0
+                md_bg_color: 0.9, 0.94, 0.91, 1
+                size_hint_y: None
+                height: self.minimum_height
+
+                MDBoxLayout:
+                    spacing: dp(12)
+                    size_hint_y: None
+                    height: self.minimum_height
+
+                    MDIcon:
+                        icon: "shield-check"
+                        font_size: "26sp"
+                        theme_text_color: "Custom"
+                        text_color: 0.08, 0.45, 0.25, 1
+
+                    MDBoxLayout:
+                        orientation: 'vertical'
+                        size_hint_y: None
+                        height: self.minimum_height
+
+                        MDLabel:
+                            text: "Acceso seguro al sistema"
+                            font_style: "Subtitle2"
+                            bold: True
+                            size_hint_y: None
+                            height: dp(18)
+
+                        MDLabel:
+                            text: "Solo usuarios autorizados"
+                            font_style: "Caption"
+                            theme_text_color: "Hint"
+                            size_hint_y: None
+                            height: dp(14)
