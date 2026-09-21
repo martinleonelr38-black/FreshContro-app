@@ -4,10 +4,11 @@ from kivymd.uix.screenmanager import MDScreenManager
 from kivymd.uix.screen import MDScreen
 from kivy.lang import Builder
 
-# Definir la ruta directa a la carpeta vistas
-VISTAS_DIR = os.path.join(os.path.dirname(__file__), "vistas")
+# Importar funciones del gestor de base de datos
+from base_de_datos.gestor_bd import inicializar_bd, registrar_usuario, verificar_credenciales
 
-# Cargar explícitamente cada vista una sola vez
+# Cargar archivos KV
+VISTAS_DIR = os.path.join(os.path.dirname(__file__), "vistas")
 Builder.load_file(os.path.join(VISTAS_DIR, "inicio_sesion.kv"))
 Builder.load_file(os.path.join(VISTAS_DIR, "registro_gerente.kv"))
 Builder.load_file(os.path.join(VISTAS_DIR, "registro_empleado.kv"))
@@ -16,10 +17,8 @@ Builder.load_file(os.path.join(VISTAS_DIR, "panel_gerente.kv"))
 Builder.load_file(os.path.join(VISTAS_DIR, "escaner.kv"))
 
 
-# Usamos nombres de clase distintos al nombre del archivo para evitar el auto-load de Kivy
 class PantallaInicioSesion(MDScreen):
     def toggle_password_visibility(self, button, field):
-        """Alterna visibilidad de la contraseña con el ojito."""
         field.password = not field.password
         button.icon = "eye" if not field.password else "eye-off"
 
@@ -28,24 +27,25 @@ class PantallaInicioSesion(MDScreen):
         password = self.ids.password_field.text.strip()
         label_error = self.ids.mensaje_error
 
-        # Control de campos vacíos
         if not usuario or not password:
             label_error.text = "Por favor ingrese usuario y contraseña"
             return
 
-        # Control y bloqueo de credenciales
-        if usuario == "gerente" and password == "1234":
+        # Verificar credenciales en la base de datos real
+        usuario_db = verificar_credenciales(usuario, password)
+
+        if usuario_db:
             label_error.text = ""
             self.ids.usuario_field.text = ""
             self.ids.password_field.text = ""
-            self.manager.current = "panel_gerente"
-        elif usuario == "empleado" and password == "1234":
-            label_error.text = ""
-            self.ids.usuario_field.text = ""
-            self.ids.password_field.text = ""
-            self.manager.current = "panel_empleado"
+            
+            # Redirección dinámica según el rol guardado en la BD
+            rol = usuario_db["rol"].lower()
+            if rol == "gerente":
+                self.manager.current = "panel_gerente"
+            elif rol == "empleado":
+                self.manager.current = "panel_empleado"
         else:
-            # Bloqueo por contraseña/usuario incorrecto
             label_error.text = "Usuario o contraseña incorrectos"
 
     def ir_a_registro_gerente(self):
@@ -65,7 +65,41 @@ class PantallaRegistroGerente(MDScreen):
         button.icon = "eye" if not field.password else "eye-off"
 
     def guardar_gerente(self):
-        self.manager.current = "inicio_sesion"
+        nombre = self.ids.nombre_field.text.strip()
+        apellido = self.ids.apellido_field.text.strip()
+        usuario = self.ids.usuario_field.text.strip()
+        password = self.ids.password_field.text.strip()
+        confirm_password = self.ids.confirm_password_field.text.strip()
+        email = self.ids.email_field.text.strip()
+        telefono = self.ids.telefono_field.text.strip()
+
+        if not all([nombre, apellido, usuario, password, confirm_password, email, telefono]):
+            print("Error: Todos los campos son obligatorios")
+            return
+
+        if password != confirm_password:
+            print("Error: Las contraseñas no coinciden")
+            return
+
+        exito, msg = registrar_usuario(
+            nombre, apellido, usuario, password, email, telefono, cargo="Gerente General", rol="gerente"
+        )
+
+        if exito:
+            print("Gerente guardado con éxito")
+            self.limpiar_campos()
+            self.manager.current = "inicio_sesion"
+        else:
+            print(f"Error BD: {msg}")
+
+    def limpiar_campos(self):
+        self.ids.nombre_field.text = ""
+        self.ids.apellido_field.text = ""
+        self.ids.usuario_field.text = ""
+        self.ids.password_field.text = ""
+        self.ids.confirm_password_field.text = ""
+        self.ids.email_field.text = ""
+        self.ids.telefono_field.text = ""
 
     def ir_a_login(self):
         self.manager.current = "inicio_sesion"
@@ -77,7 +111,43 @@ class PantallaRegistroEmpleado(MDScreen):
         button.icon = "eye" if not field.password else "eye-off"
 
     def guardar_empleado(self):
-        self.manager.current = "inicio_sesion"
+        nombre = self.ids.nombre_field.text.strip()
+        apellido = self.ids.apellido_field.text.strip()
+        usuario = self.ids.usuario_field.text.strip()
+        password = self.ids.password_field.text.strip()
+        confirm_password = self.ids.confirm_password_field.text.strip()
+        email = self.ids.email_field.text.strip()
+        telefono = self.ids.telefono_field.text.strip()
+        cargo = self.ids.cargo_field.text.strip()
+
+        if not all([nombre, apellido, usuario, password, confirm_password, email, telefono, cargo]):
+            print("Error: Todos los campos son obligatorios")
+            return
+
+        if password != confirm_password:
+            print("Error: Las contraseñas no coinciden")
+            return
+
+        exito, msg = registrar_usuario(
+            nombre, apellido, usuario, password, email, telefono, cargo=cargo, rol="empleado"
+        )
+
+        if exito:
+            print("Empleado guardado con éxito")
+            self.limpiar_campos()
+            self.manager.current = "inicio_sesion"
+        else:
+            print(f"Error BD: {msg}")
+
+    def limpiar_campos(self):
+        self.ids.nombre_field.text = ""
+        self.ids.apellido_field.text = ""
+        self.ids.usuario_field.text = ""
+        self.ids.password_field.text = ""
+        self.ids.confirm_password_field.text = ""
+        self.ids.email_field.text = ""
+        self.ids.telefono_field.text = ""
+        self.ids.cargo_field.text = ""
 
     def ir_a_login(self):
         self.manager.current = "inicio_sesion"
@@ -124,6 +194,9 @@ class PantallaEscaner(MDScreen):
 
 class FreshControlApp(MDApp):
     def build(self):
+        # Crear la base de datos y sus tablas al iniciar
+        inicializar_bd()
+
         self.theme_cls.primary_palette = "Green"
         self.theme_cls.theme_style = "Light"
 
