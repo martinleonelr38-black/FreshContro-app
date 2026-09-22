@@ -3,6 +3,8 @@
 
     ScrollView:
         do_scroll_x: False
+        do_scroll_y: True
+
         MDBoxLayout:
             orientation: 'vertical'
             padding: [dp(20), dp(20), dp(20), dp(20)]
@@ -62,28 +64,24 @@
                         font_style: "H6"
                         bold: True
 
-                # Nombre
                 MDTextField:
                     id: nombre_field
                     hint_text: "Ingrese el nombre"
                     icon_left: "account-outline"
                     mode: "rectangle"
 
-                # Apellido
                 MDTextField:
                     id: apellido_field
                     hint_text: "Ingrese el apellido"
                     icon_left: "account-outline"
                     mode: "rectangle"
 
-                # Usuario
                 MDTextField:
                     id: usuario_field
                     hint_text: "Ingrese el usuario"
                     icon_left: "account-box-outline"
                     mode: "rectangle"
 
-                # Contraseña
                 RelativeLayout:
                     size_hint_y: None
                     height: dp(60)
@@ -102,7 +100,6 @@
                         theme_text_color: "Hint"
                         on_release: root.toggle_password_visibility(self, password_field)
 
-                # Confirmar Contraseña
                 RelativeLayout:
                     size_hint_y: None
                     height: dp(60)
@@ -121,21 +118,18 @@
                         theme_text_color: "Hint"
                         on_release: root.toggle_password_visibility(self, confirm_password_field)
 
-                # Correo Electrónico
                 MDTextField:
                     id: email_field
                     hint_text: "Ingrese el correo electrónico"
                     icon_left: "email-outline"
                     mode: "rectangle"
 
-                # Teléfono
                 MDTextField:
                     id: telefono_field
                     hint_text: "Ingrese el teléfono"
                     icon_left: "phone-outline"
                     mode: "rectangle"
 
-                # Cargo / Puesto
                 MDTextField:
                     id: cargo_field
                     hint_text: "Ej: Cajero, Almacenero, Repositor"

@@ -10,11 +10,10 @@ def obtener_conexion():
     return conn
 
 def inicializar_bd():
-    """Crea la tabla unificada de usuarios y demás tablas necesarias."""
+    """Crea la tabla unificada de usuarios y productos si no existen."""
     conn = obtener_conexion()
     cursor = conn.cursor()
 
-    # Tabla de Usuarios (Soporta Gerentes y Empleados)
     cursor.execute("""
         CREATE TABLE IF NOT EXISTS usuarios (
             id_usuario INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -29,7 +28,6 @@ def inicializar_bd():
         )
     """)
 
-    # Tabla de Productos
     cursor.execute("""
         CREATE TABLE IF NOT EXISTS productos (
             id_producto INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -45,7 +43,7 @@ def inicializar_bd():
     conn.commit()
     conn.close()
 
-def registrar_usuario(nombre, apellido, usuario, password, email, telefono, cargo="Gerente", rol="gerente"):
+def registrar_usuario(nombre, apellido, usuario, password, email, telefono, cargo="Empleado", rol="empleado"):
     """Inserta un nuevo usuario (gerente o empleado) en la base de datos."""
     try:
         conn = obtener_conexion()
@@ -58,14 +56,14 @@ def registrar_usuario(nombre, apellido, usuario, password, email, telefono, carg
         
         conn.commit()
         conn.close()
-        return True, "Registro guardado correctamente"
+        return True, "Usuario registrado exitosamente"
     except sqlite3.IntegrityError:
         return False, "El nombre de usuario ya existe"
     except Exception as e:
-        return False, f"Error al guardar: {e}"
+        return False, f"Error en la base de datos: {e}"
 
 def verificar_credenciales(usuario, password):
-    """Consulta la BD y retorna los datos del usuario si coinciden usuario y contraseña."""
+    """Verifica usuario y contraseña en la BD. Retorna la fila si coincide, None si no."""
     conn = obtener_conexion()
     cursor = conn.cursor()
     
