@@ -70,6 +70,7 @@ class PantallaRegistroGerente(MDScreen):
         button.icon = "eye" if not field.password else "eye-off"
 
     def guardar_gerente(self):
+        label_error = self.ids.mensaje_error
         nombre = self.ids.nombre_field.text.strip()
         apellido = self.ids.apellido_field.text.strip()
         usuario = self.ids.usuario_field.text.strip()
@@ -79,11 +80,11 @@ class PantallaRegistroGerente(MDScreen):
         telefono = self.ids.telefono_field.text.strip()
 
         if not all([nombre, apellido, usuario, password, confirm_password, email, telefono]):
-            print("Error: Todos los campos son obligatorios")
+            label_error.text = "Por favor complete todos los datos"
             return
 
         if password != confirm_password:
-            print("Error: Las contraseñas no coinciden")
+            label_error.text = "Las contraseñas no coinciden"
             return
 
         exito, msg = registrar_usuario(
@@ -91,11 +92,11 @@ class PantallaRegistroGerente(MDScreen):
         )
 
         if exito:
-            print("Gerente registrado correctamente")
+            label_error.text = ""
             self.limpiar_campos()
             self.manager.current = "inicio_sesion"
         else:
-            print(f"Error BD: {msg}")
+            label_error.text = msg
 
     def limpiar_campos(self):
         self.ids.nombre_field.text = ""
@@ -105,8 +106,11 @@ class PantallaRegistroGerente(MDScreen):
         self.ids.confirm_password_field.text = ""
         self.ids.email_field.text = ""
         self.ids.telefono_field.text = ""
+        if hasattr(self.ids, 'mensaje_error'):
+            self.ids.mensaje_error.text = ""
 
     def ir_a_login(self):
+        self.limpiar_campos()
         self.manager.current = "inicio_sesion"
 
 
@@ -116,6 +120,7 @@ class PantallaRegistroEmpleado(MDScreen):
         button.icon = "eye" if not field.password else "eye-off"
 
     def guardar_empleado(self):
+        label_error = self.ids.mensaje_error
         nombre = self.ids.nombre_field.text.strip()
         apellido = self.ids.apellido_field.text.strip()
         usuario = self.ids.usuario_field.text.strip()
@@ -126,11 +131,11 @@ class PantallaRegistroEmpleado(MDScreen):
         cargo = self.ids.cargo_field.text.strip()
 
         if not all([nombre, apellido, usuario, password, confirm_password, email, telefono, cargo]):
-            print("Error: Todos los campos son obligatorios")
+            label_error.text = "Por favor complete todos los datos"
             return
 
         if password != confirm_password:
-            print("Error: Las contraseñas no coinciden")
+            label_error.text = "Las contraseñas no coinciden"
             return
 
         exito, msg = registrar_usuario(
@@ -138,11 +143,11 @@ class PantallaRegistroEmpleado(MDScreen):
         )
 
         if exito:
-            print("Empleado registrado correctamente")
+            label_error.text = ""
             self.limpiar_campos()
             self.manager.current = "inicio_sesion"
         else:
-            print(f"Error BD: {msg}")
+            label_error.text = msg
 
     def limpiar_campos(self):
         self.ids.nombre_field.text = ""
@@ -153,8 +158,11 @@ class PantallaRegistroEmpleado(MDScreen):
         self.ids.email_field.text = ""
         self.ids.telefono_field.text = ""
         self.ids.cargo_field.text = ""
+        if hasattr(self.ids, 'mensaje_error'):
+            self.ids.mensaje_error.text = ""
 
     def ir_a_login(self):
+        self.limpiar_campos()
         self.manager.current = "inicio_sesion"
 
 
