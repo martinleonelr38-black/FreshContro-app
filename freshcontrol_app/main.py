@@ -1,14 +1,21 @@
 import os
+import sys
+
+# Agregar la carpeta base al path para evitar errores de importación
+APP_DIR = os.path.dirname(os.path.abspath(__file__))
+if APP_DIR not in sys.path:
+    sys.path.insert(0, APP_DIR)
+
 from kivymd.app import MDApp
 from kivymd.uix.screenmanager import MDScreenManager
 from kivymd.uix.screen import MDScreen
 from kivy.lang import Builder
 
-# Importar funciones del gestor de base de datos
+# Importar funciones de base de datos
 from base_de_datos.gestor_bd import inicializar_bd, registrar_usuario, verificar_credenciales
 
 # Cargar archivos KV
-VISTAS_DIR = os.path.join(os.path.dirname(__file__), "vistas")
+VISTAS_DIR = os.path.join(APP_DIR, "vistas")
 Builder.load_file(os.path.join(VISTAS_DIR, "inicio_sesion.kv"))
 Builder.load_file(os.path.join(VISTAS_DIR, "registro_gerente.kv"))
 Builder.load_file(os.path.join(VISTAS_DIR, "registro_empleado.kv"))
@@ -31,7 +38,6 @@ class PantallaInicioSesion(MDScreen):
             label_error.text = "Por favor ingrese usuario y contraseña"
             return
 
-        # Verificar credenciales en la base de datos real
         usuario_db = verificar_credenciales(usuario, password)
 
         if usuario_db:
@@ -39,7 +45,6 @@ class PantallaInicioSesion(MDScreen):
             self.ids.usuario_field.text = ""
             self.ids.password_field.text = ""
             
-            # Redirección dinámica según el rol guardado en la BD
             rol = usuario_db["rol"].lower()
             if rol == "gerente":
                 self.manager.current = "panel_gerente"
@@ -86,7 +91,7 @@ class PantallaRegistroGerente(MDScreen):
         )
 
         if exito:
-            print("Gerente guardado con éxito")
+            print("Gerente registrado correctamente")
             self.limpiar_campos()
             self.manager.current = "inicio_sesion"
         else:
@@ -133,7 +138,7 @@ class PantallaRegistroEmpleado(MDScreen):
         )
 
         if exito:
-            print("Empleado guardado con éxito")
+            print("Empleado registrado correctamente")
             self.limpiar_campos()
             self.manager.current = "inicio_sesion"
         else:
@@ -194,7 +199,6 @@ class PantallaEscaner(MDScreen):
 
 class FreshControlApp(MDApp):
     def build(self):
-        # Crear la base de datos y sus tablas al iniciar
         inicializar_bd()
 
         self.theme_cls.primary_palette = "Green"
