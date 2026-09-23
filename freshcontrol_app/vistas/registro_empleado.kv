@@ -69,22 +69,25 @@
                     hint_text: "Ingrese el nombre"
                     icon_left: "account-outline"
                     mode: "rectangle"
+                    helper_text_mode: "on_error"
 
                 MDTextField:
                     id: apellido_field
                     hint_text: "Ingrese el apellido"
                     icon_left: "account-outline"
                     mode: "rectangle"
+                    helper_text_mode: "on_error"
 
                 MDTextField:
                     id: usuario_field
                     hint_text: "Ingrese el usuario"
                     icon_left: "account-box-outline"
                     mode: "rectangle"
+                    helper_text_mode: "on_error"
 
                 RelativeLayout:
                     size_hint_y: None
-                    height: dp(60)
+                    height: dp(68)
 
                     MDTextField:
                         id: password_field
@@ -92,17 +95,18 @@
                         icon_left: "lock-outline"
                         password: True
                         mode: "rectangle"
+                        helper_text_mode: "on_error"
                         pos_hint: {"center_x": 0.5, "center_y": 0.5}
 
                     MDIconButton:
                         icon: "eye-off"
-                        pos_hint: {"right": 0.98, "center_y": 0.4}
+                        pos_hint: {"right": 0.98, "center_y": 0.5}
                         theme_text_color: "Hint"
                         on_release: root.toggle_password_visibility(self, password_field)
 
                 RelativeLayout:
                     size_hint_y: None
-                    height: dp(60)
+                    height: dp(68)
 
                     MDTextField:
                         id: confirm_password_field
@@ -110,11 +114,12 @@
                         icon_left: "lock-outline"
                         password: True
                         mode: "rectangle"
+                        helper_text_mode: "on_error"
                         pos_hint: {"center_x": 0.5, "center_y": 0.5}
 
                     MDIconButton:
                         icon: "eye-off"
-                        pos_hint: {"right": 0.98, "center_y": 0.4}
+                        pos_hint: {"right": 0.98, "center_y": 0.5}
                         theme_text_color: "Hint"
                         on_release: root.toggle_password_visibility(self, confirm_password_field)
 
@@ -123,24 +128,27 @@
                     hint_text: "Ingrese el correo electrónico"
                     icon_left: "email-outline"
                     mode: "rectangle"
+                    helper_text_mode: "on_error"
 
                 MDTextField:
                     id: telefono_field
                     hint_text: "Ingrese el teléfono"
                     icon_left: "phone-outline"
                     mode: "rectangle"
+                    helper_text_mode: "on_error"
 
                 MDTextField:
                     id: cargo_field
                     hint_text: "Ej: Cajero, Almacenero, Repositor"
                     icon_left: "briefcase-outline"
                     mode: "rectangle"
+                    helper_text_mode: "on_error"
 
                 MDLabel:
                     id: mensaje_error
                     text: ""
                     font_style: "Caption"
-                    halign: "center"
+                    halign: "left"
                     theme_text_color: "Custom"
                     text_color: 0.9, 0.1, 0.1, 1
                     size_hint_y: None
@@ -154,6 +162,174 @@
                     size_hint_x: 1
                     elevation: 1
                     on_release: root.guardar_empleado()
+
+                MDRectangleFlatIconButton:
+                    text: "Volver al Inicio de Sesión"
+                    icon: "arrow-left"
+                    line_color: 0.08, 0.45, 0.25, 1
+                    icon_color: 0.08, 0.45, 0.25, 1
+                    text_color: 0.08, 0.45, 0.25, 1
+                    pos_hint: {"center_x": .5}
+                    size_hint_x: 1
+                    on_release: root.ir_a_login()
+
+<PantallaRegistroGerente>:
+    md_bg_color: 0.95, 0.96, 0.96, 1
+
+    ScrollView:
+        do_scroll_x: False
+        do_scroll_y: True
+
+        MDBoxLayout:
+            orientation: 'vertical'
+            padding: [dp(20), dp(20), dp(20), dp(20)]
+            spacing: dp(15)
+            size_hint_y: None
+            height: self.minimum_height
+            pos_hint: {"center_x": 0.5}
+
+            MDBoxLayout:
+                orientation: 'vertical'
+                size_hint_y: None
+                height: dp(60)
+                spacing: dp(2)
+
+                MDLabel:
+                    text: "FreshControl"
+                    font_style: "H4"
+                    bold: True
+                    halign: "center"
+                    theme_text_color: "Custom"
+                    text_color: 0.08, 0.45, 0.25, 1
+                    size_hint_y: None
+                    height: dp(40)
+
+                MDLabel:
+                    text: "Registro de Gerente"
+                    font_style: "Caption"
+                    halign: "center"
+                    theme_text_color: "Hint"
+                    size_hint_y: None
+                    height: dp(18)
+
+            MDCard:
+                orientation: 'vertical'
+                padding: dp(20)
+                spacing: dp(12)
+                radius: [15,]
+                elevation: 2
+                size_hint_y: None
+                height: self.minimum_height
+                pos_hint: {"center_x": 0.5}
+
+                MDBoxLayout:
+                    size_hint_y: None
+                    height: dp(30)
+                    spacing: dp(10)
+                    pos_hint: {"center_x": 0.5}
+
+                    MDIcon:
+                        icon: "crown"
+                        font_size: "24sp"
+                        theme_text_color: "Custom"
+                        text_color: 0.08, 0.45, 0.25, 1
+
+                    MDLabel:
+                        text: "Crear Cuenta de Gerente"
+                        font_style: "H6"
+                        bold: True
+
+                MDTextField:
+                    id: nombre_field
+                    hint_text: "Ingrese el nombre"
+                    icon_left: "account-outline"
+                    mode: "rectangle"
+                    helper_text_mode: "on_error"
+
+                MDTextField:
+                    id: apellido_field
+                    hint_text: "Ingrese el apellido"
+                    icon_left: "account-outline"
+                    mode: "rectangle"
+                    helper_text_mode: "on_error"
+
+                MDTextField:
+                    id: usuario_field
+                    hint_text: "Ingrese el usuario"
+                    icon_left: "account-box-outline"
+                    mode: "rectangle"
+                    helper_text_mode: "on_error"
+
+                RelativeLayout:
+                    size_hint_y: None
+                    height: dp(68)
+
+                    MDTextField:
+                        id: password_field
+                        hint_text: "Ingrese la contraseña"
+                        icon_left: "lock-outline"
+                        password: True
+                        mode: "rectangle"
+                        helper_text_mode: "on_error"
+                        pos_hint: {"center_x": 0.5, "center_y": 0.5}
+
+                    MDIconButton:
+                        icon: "eye-off"
+                        pos_hint: {"right": 0.98, "center_y": 0.5}
+                        theme_text_color: "Hint"
+                        on_release: root.toggle_password_visibility(self, password_field)
+
+                RelativeLayout:
+                    size_hint_y: None
+                    height: dp(68)
+
+                    MDTextField:
+                        id: confirm_password_field
+                        hint_text: "Confirme la contraseña"
+                        icon_left: "lock-outline"
+                        password: True
+                        mode: "rectangle"
+                        helper_text_mode: "on_error"
+                        pos_hint: {"center_x": 0.5, "center_y": 0.5}
+
+                    MDIconButton:
+                        icon: "eye-off"
+                        pos_hint: {"right": 0.98, "center_y": 0.5}
+                        theme_text_color: "Hint"
+                        on_release: root.toggle_password_visibility(self, confirm_password_field)
+
+                MDTextField:
+                    id: email_field
+                    hint_text: "Ingrese el correo electrónico"
+                    icon_left: "email-outline"
+                    mode: "rectangle"
+                    helper_text_mode: "on_error"
+
+                MDTextField:
+                    id: telefono_field
+                    hint_text: "Ingrese el teléfono"
+                    icon_left: "phone-outline"
+                    mode: "rectangle"
+                    helper_text_mode: "on_error"
+
+                MDLabel:
+                    id: mensaje_error
+                    text: ""
+                    font_style: "Caption"
+                    halign: "left"
+                    theme_text_color: "Custom"
+                    text_color: 0.9, 0.1, 0.1, 1
+                    size_hint_y: None
+                    height: dp(20)
+
+                MDRaisedButton:
+                    text: "Registrar Gerente"
+                    icon: "account-plus"
+                    md_bg_color: 0.08, 0.45, 0.25, 1
+                    pos_hint: {"center_x": .5}
+                    size_hint_x: 1
+                    elevation: 1
+                    on_release: root.guardar_gerente()
 
                 MDRectangleFlatIconButton:
                     text: "Volver al Inicio de Sesión"
