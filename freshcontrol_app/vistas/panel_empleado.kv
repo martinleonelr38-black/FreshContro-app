@@ -1,15 +1,15 @@
 <PantallaPanelEmpleado>:
-    md_bg_color: 0.95, 0.96, 0.96, 1
+    md_bg_color: 0.96, 0.97, 0.97, 1
 
     MDBoxLayout:
         orientation: 'vertical'
 
-        # Toolbar Superior (Header)
+        # Toolbar / Header Superior
         MDTopAppBar:
-            title: f"Panel Empleado - {root.nombre_empleado}"
-            icon: "menu"
+            title: "Panel del Empleado"
+            elevation: 1
             left_action_items: [["menu", lambda x: getattr(root, 'toggle_nav_drawer', lambda: None)()]]
-            right_action_items: [["logout", lambda x: root.cerrar_sesion()]]
+            right_action_items: [["bell-outline", lambda x: None], ["account-circle-outline", lambda x: None]]
             md_bg_color: 0.08, 0.45, 0.25, 1
             specific_text_color: 1, 1, 1, 1
 
@@ -18,122 +18,357 @@
 
             MDBoxLayout:
                 orientation: 'vertical'
-                padding: dp(15)
-                spacing: dp(15)
+                padding: dp(16)
+                spacing: dp(16)
                 size_hint_y: None
                 height: self.minimum_height
 
-                # Mensaje de Bienvenida
+                # Banner Bienvenida y Fecha/Hora
                 MDCard:
-                    orientation: 'vertical'
-                    padding: dp(15)
-                    spacing: dp(5)
-                    radius: [10,]
+                    orientation: 'horizontal'
+                    padding: dp(16)
+                    radius: [12,]
                     elevation: 1
                     size_hint_y: None
-                    height: self.minimum_height
+                    height: dp(80)
+                    md_bg_color: 1, 1, 1, 1
 
-                    MDLabel:
-                        text: f"¡Bienvenido, {root.nombre_empleado}!"
-                        font_style: "H6"
-                        bold: True
-                        theme_text_color: "Custom"
-                        text_color: 0.08, 0.45, 0.25, 1
-                        size_hint_y: None
-                        height: dp(28)
-
-                    MDLabel:
-                        text: "Aquí puedes registrar entradas, salidas y consultar el inventario."
-                        font_style: "Body2"
-                        theme_text_color: "Hint"
-                        size_hint_y: None
-                        height: dp(20)
-
-                # Métricas Rápidas (Stock dinámico desde SQLite)
-                MDGridLayout:
-                    cols: 2
-                    spacing: dp(10)
-                    size_hint_y: None
-                    height: self.minimum_height
-
-                    MDCard:
-                        padding: dp(15)
+                    MDBoxLayout:
                         orientation: 'vertical'
-                        radius: [10,]
+                        size_hint_x: 0.65
+
+                        MDLabel:
+                            text: f"¡Bienvenido, {root.nombre_empleado}!"
+                            font_style: "H6"
+                            bold: True
+                            theme_text_color: "Custom"
+                            text_color: 0.1, 0.1, 0.1, 1
+
+                        MDLabel:
+                            text: "Aquí puedes registrar entradas, salidas y consultar el inventario."
+                            font_style: "Caption"
+                            theme_text_color: "Hint"
+
+                    MDBoxLayout:
+                        orientation: 'vertical'
+                        size_hint_x: 0.35
+                        halign: 'right'
+                        spacing: dp(4)
+
+                        MDBoxLayout:
+                            spacing: dp(4)
+                            MDIcon:
+                                icon: "calendar"
+                                font_size: "16sp"
+                                theme_text_color: "Hint"
+                            MDLabel:
+                                text: getattr(root, 'fecha_actual', '18 de Mayo de 2025')
+                                font_style: "Caption"
+                                theme_text_color: "Hint"
+
+                        MDBoxLayout:
+                            spacing: dp(4)
+                            MDIcon:
+                                icon: "clock-outline"
+                                font_size: "16sp"
+                                theme_text_color: "Hint"
+                            MDLabel:
+                                text: getattr(root, 'hora_actual', '10:24 AM')
+                                font_style: "Caption"
+                                theme_text_color: "Hint"
+
+                # Cuatro Tarjetas de Métricas Rápidas
+                MDGridLayout:
+                    cols: 4
+                    spacing: dp(12)
+                    size_hint_y: None
+                    height: dp(110)
+
+                    # Total Productos
+                    MDCard:
+                        orientation: 'vertical'
+                        padding: dp(12)
+                        radius: [12,]
                         elevation: 1
-                        height: dp(100)
-                        size_hint_y: None
+                        md_bg_color: 1, 1, 1, 1
 
                         MDLabel:
                             text: "Total Productos"
                             font_style: "Caption"
-                            theme_text_color: "Hint"
-
-                        MDLabel:
-                            text: str(root.total_productos)
-                            font_style: "H4"
                             bold: True
                             theme_text_color: "Custom"
                             text_color: 0.08, 0.45, 0.25, 1
 
+                        MDBoxLayout:
+                            spacing: dp(8)
+                            MDIcon:
+                                icon: "package-variant-closed"
+                                font_size: "32sp"
+                                theme_text_color: "Custom"
+                                text_color: 0.2, 0.7, 0.3, 1
+                            MDLabel:
+                                text: str(root.total_productos)
+                                font_style: "H4"
+                                bold: True
+
+                        MDLabel:
+                            text: "en inventario"
+                            font_style: "Caption"
+                            theme_text_color: "Hint"
+
+                    # Stock Bajo
                     MDCard:
-                        padding: dp(15)
                         orientation: 'vertical'
-                        radius: [10,]
+                        padding: dp(12)
+                        radius: [12,]
                         elevation: 1
-                        height: dp(100)
-                        size_hint_y: None
+                        md_bg_color: 1, 1, 1, 1
 
                         MDLabel:
                             text: "Stock Bajo"
                             font_style: "Caption"
-                            theme_text_color: "Hint"
-
-                        MDLabel:
-                            text: str(root.stock_bajo)
-                            font_style: "H4"
                             bold: True
                             theme_text_color: "Custom"
-                            text_color: 0.85, 0.35, 0.1, 1
+                            text_color: 0.85, 0.45, 0.0, 1
 
-                # Acciones Rápidas
+                        MDBoxLayout:
+                            spacing: dp(8)
+                            MDIcon:
+                                icon: "alert-decagram"
+                                font_size: "32sp"
+                                theme_text_color: "Custom"
+                                text_color: 1, 0.6, 0.0, 1
+                            MDLabel:
+                                text: str(root.stock_bajo)
+                                font_style: "H4"
+                                bold: True
+
+                        MDLabel:
+                            text: "requieren atención"
+                            font_style: "Caption"
+                            theme_text_color: "Hint"
+
+                    # Por Vencer
+                    MDCard:
+                        orientation: 'vertical'
+                        padding: dp(12)
+                        radius: [12,]
+                        elevation: 1
+                        md_bg_color: 1, 1, 1, 1
+
+                        MDLabel:
+                            text: "Por Vencer"
+                            font_style: "Caption"
+                            bold: True
+                            theme_text_color: "Custom"
+                            text_color: 0.1, 0.4, 0.7, 1
+
+                        MDBoxLayout:
+                            spacing: dp(8)
+                            MDIcon:
+                                icon: "calendar-clock"
+                                font_size: "32sp"
+                                theme_text_color: "Custom"
+                                text_color: 0.15, 0.5, 0.8, 1
+                            MDLabel:
+                                text: str(getattr(root, 'por_vencer', 0))
+                                font_style: "H4"
+                                bold: True
+
+                        MDLabel:
+                            text: "próximos 7 días"
+                            font_style: "Caption"
+                            theme_text_color: "Hint"
+
+                    # Vencidos
+                    MDCard:
+                        orientation: 'vertical'
+                        padding: dp(12)
+                        radius: [12,]
+                        elevation: 1
+                        md_bg_color: 1, 1, 1, 1
+
+                        MDLabel:
+                            text: "Vencidos"
+                            font_style: "Caption"
+                            bold: True
+                            theme_text_color: "Custom"
+                            text_color: 0.8, 0.1, 0.1, 1
+
+                        MDBoxLayout:
+                            spacing: dp(8)
+                            MDIcon:
+                                icon: "close-circle"
+                                font_size: "32sp"
+                                theme_text_color: "Custom"
+                                text_color: 0.85, 0.2, 0.2, 1
+                            MDLabel:
+                                text: str(getattr(root, 'vencidos', 0))
+                                font_style: "H4"
+                                bold: True
+
+                        MDLabel:
+                            text: "requieren acción"
+                            font_style: "Caption"
+                            theme_text_color: "Hint"
+
+                # Acciones Rápidas (Iconos Grandes Redondos)
                 MDLabel:
                     text: "Acciones Rápidas"
                     font_style: "Subtitle1"
                     bold: True
                     size_hint_y: None
-                    height: dp(24)
+                    height: dp(28)
 
                 MDGridLayout:
-                    cols: 2
-                    spacing: dp(10)
+                    cols: 4
+                    spacing: dp(12)
                     size_hint_y: None
-                    height: self.minimum_height
+                    height: dp(130)
 
-                    MDRaisedButton:
-                        text: "Registrar Entrada"
-                        icon: "package-down"
-                        md_bg_color: 0.08, 0.45, 0.25, 1
-                        size_hint_x: 1
+                    # Registrar Entrada
+                    MDCard:
+                        orientation: 'vertical'
+                        padding: dp(12)
+                        radius: [12,]
+                        elevation: 1
+                        ripple_behavior: True
                         on_release: getattr(root, 'registrar_entrada', lambda: None)()
 
-                    MDRaisedButton:
-                        text: "Registrar Salida"
-                        icon: "package-up"
-                        md_bg_color: 0.8, 0.2, 0.2, 1
-                        size_hint_x: 1
+                        MDIconButton:
+                            icon: "package-down"
+                            user_font_size: "28sp"
+                            theme_text_color: "Custom"
+                            text_color: 1, 1, 1, 1
+                            md_bg_color: 0.08, 0.55, 0.28, 1
+                            pos_hint: {"center_x": .5}
+
+                        MDLabel:
+                            text: "Registrar Entrada"
+                            font_style: "Caption"
+                            bold: True
+                            halign: "center"
+
+                        MDLabel:
+                            text: "Agregar productos"
+                            font_style: "Overline"
+                            theme_text_color: "Hint"
+                            halign: "center"
+
+                    # Registrar Salida
+                    MDCard:
+                        orientation: 'vertical'
+                        padding: dp(12)
+                        radius: [12,]
+                        elevation: 1
+                        ripple_behavior: True
                         on_release: getattr(root, 'registrar_salida', lambda: None)()
 
-                    MDRaisedButton:
-                        text: "Escanear Producto"
-                        icon: "barcode-scan"
-                        md_bg_color: 0.15, 0.4, 0.6, 1
-                        size_hint_x: 1
+                        MDIconButton:
+                            icon: "package-up"
+                            user_font_size: "28sp"
+                            theme_text_color: "Custom"
+                            text_color: 1, 1, 1, 1
+                            md_bg_color: 0.85, 0.25, 0.2, 1
+                            pos_hint: {"center_x": .5}
+
+                        MDLabel:
+                            text: "Registrar Salida"
+                            font_style: "Caption"
+                            bold: True
+                            halign: "center"
+
+                        MDLabel:
+                            text: "Quitar productos"
+                            font_style: "Overline"
+                            theme_text_color: "Hint"
+                            halign: "center"
+
+                    # Escanear Producto
+                    MDCard:
+                        orientation: 'vertical'
+                        padding: dp(12)
+                        radius: [12,]
+                        elevation: 1
+                        ripple_behavior: True
                         on_release: getattr(root, 'ir_a_escaner', lambda: None)()
 
-                    MDRaisedButton:
-                        text: "Buscar Producto"
-                        icon: "magnify"
-                        md_bg_color: 0.4, 0.4, 0.4, 1
-                        size_hint_x: 1
+                        MDIconButton:
+                            icon: "barcode-scan"
+                            user_font_size: "28sp"
+                            theme_text_color: "Custom"
+                            text_color: 0.1, 0.4, 0.7, 1
+                            md_bg_color: 0.88, 0.93, 0.98, 1
+                            pos_hint: {"center_x": .5}
+
+                        MDLabel:
+                            text: "Escanear Producto"
+                            font_style: "Caption"
+                            bold: True
+                            halign: "center"
+
+                        MDLabel:
+                            text: "Código de barras"
+                            font_style: "Overline"
+                            theme_text_color: "Hint"
+                            halign: "center"
+
+                    # Buscar Producto
+                    MDCard:
+                        orientation: 'vertical'
+                        padding: dp(12)
+                        radius: [12,]
+                        elevation: 1
+                        ripple_behavior: True
                         on_release: getattr(root, 'buscar_producto', lambda: None)()
+
+                        MDIconButton:
+                            icon: "magnify"
+                            user_font_size: "28sp"
+                            theme_text_color: "Custom"
+                            text_color: 0.4, 0.2, 0.6, 1
+                            md_bg_color: 0.93, 0.9, 0.96, 1
+                            pos_hint: {"center_x": .5}
+
+                        MDLabel:
+                            text: "Buscar Producto"
+                            font_style: "Caption"
+                            bold: True
+                            halign: "center"
+
+                        MDLabel:
+                            text: "Buscar en inventario"
+                            font_style: "Overline"
+                            theme_text_color: "Hint"
+                            halign: "center"
+
+                # Consejo del Día (Footer Banner)
+                MDCard:
+                    orientation: 'horizontal'
+                    padding: dp(12)
+                    spacing: dp(12)
+                    radius: [12,]
+                    elevation: 1
+                    size_hint_y: None
+                    height: dp(70)
+                    md_bg_color: 0.92, 0.96, 0.92, 1
+
+                    MDIconButton:
+                        icon: "lightbulb-outline"
+                        user_font_size: "24sp"
+                        theme_text_color: "Custom"
+                        text_color: 1, 1, 1, 1
+                        md_bg_color: 0.1, 0.55, 0.25, 1
+
+                    MDBoxLayout:
+                        orientation: 'vertical'
+                        MDLabel:
+                            text: "Consejo del día"
+                            font_style: "Subtitle2"
+                            bold: True
+                            theme_text_color: "Custom"
+                            text_color: 0.08, 0.45, 0.25, 1
+                        MDLabel:
+                            text: "Revisa los productos por vencer diariamente para evitar pérdidas y mantener el inventario en óptimas condiciones."
+                            font_style: "Caption"
+                            theme_text_color: "Hint"
