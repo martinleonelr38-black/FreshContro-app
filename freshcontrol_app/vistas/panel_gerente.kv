@@ -1,146 +1,200 @@
-<InicioSesionVista>:
+<PantallaPanelGerente>:
     md_bg_color: 0.95, 0.96, 0.96, 1
 
-    ScrollView:
-        do_scroll_x: False
-        MDBoxLayout:
-            orientation: 'vertical'
-            padding: [dp(20), dp(20), dp(20), dp(20)]
-            spacing: dp(15)
-            size_hint_y: None
-            height: self.minimum_height
-            pos_hint: {"center_x": 0.5}
+    MDBoxLayout:
+        orientation: 'vertical'
 
-            # Encabezado (Logo + Subtítulo)
+        # Barra superior de navegación
+        MDTopAppBar:
+            title: f"Panel Gerente - {root.nombre_gerente}"
+            elevation: 2
+            md_bg_color: 0.08, 0.45, 0.25, 1
+            specific_text_color: 1, 1, 1, 1
+            right_action_items: [["logout", lambda x: root.cerrar_sesion()]]
+
+        ScrollView:
+            do_scroll_x: False
+
             MDBoxLayout:
                 orientation: 'vertical'
-                size_hint_y: None
-                height: dp(60)
-                spacing: dp(2)
-
-                MDLabel:
-                    text: "FreshControl"
-                    font_style: "H4"
-                    bold: True
-                    halign: "center"
-                    theme_text_color: "Custom"
-                    text_color: 0.08, 0.45, 0.25, 1
-                    size_hint_y: None
-                    height: dp(40)
-
-                MDLabel:
-                    text: "Control inteligente de inventario"
-                    font_style: "Caption"
-                    halign: "center"
-                    theme_text_color: "Hint"
-                    size_hint_y: None
-                    height: dp(18)
-
-            # Tarjeta Formulario Principal
-            MDCard:
-                orientation: 'vertical'
                 padding: dp(20)
-                spacing: dp(12)
-                radius: [15,]
-                elevation: 2
+                spacing: dp(16)
                 size_hint_y: None
                 height: self.minimum_height
-                pos_hint: {"center_x": 0.5}
 
+                # Encabezado del Dashboard
                 MDBoxLayout:
                     size_hint_y: None
-                    height: dp(30)
+                    height: dp(35)
                     spacing: dp(10)
-                    pos_hint: {"center_x": 0.5}
 
                     MDIcon:
-                        icon: "account"
-                        font_size: "24sp"
+                        icon: "view-dashboard-outline"
+                        font_size: "28sp"
                         theme_text_color: "Custom"
                         text_color: 0.08, 0.45, 0.25, 1
 
                     MDLabel:
-                        text: "Iniciar Sesión"
+                        text: "Métricas del Sistema"
                         font_style: "H6"
                         bold: True
 
-                MDTextField:
-                    id: usuario_field
-                    hint_text: "Ingrese su usuario"
-                    icon_left: "account-outline"
-                    mode: "rectangle"
-
-                MDTextField:
-                    id: password_field
-                    hint_text: "Ingrese su contraseña"
-                    icon_left: "lock-outline"
-                    password: True
-                    mode: "rectangle"
-
-                MDRaisedButton:
-                    text: "Iniciar Sesión"
-                    icon: "lock-open-outline"
-                    md_bg_color: 0.08, 0.45, 0.25, 1
-                    pos_hint: {"center_x": .5}
-                    size_hint_x: 1
-                    elevation: 1
-                    on_release: root.iniciar_sesion()
-
-                MDRectangleFlatIconButton:
-                    text: "Registrar como Gerente"
-                    icon: "crown-outline"
-                    line_color: 0.08, 0.45, 0.25, 1
-                    icon_color: 0.08, 0.45, 0.25, 1
-                    text_color: 0.08, 0.45, 0.25, 1
-                    pos_hint: {"center_x": .5}
-                    size_hint_x: 1
-                    on_release: root.ir_a_registro_gerente()
-
-                MDRectangleFlatIconButton:
-                    text: "Registrar como Empleado"
-                    icon: "account-outline"
-                    line_color: 0.08, 0.45, 0.25, 1
-                    icon_color: 0.08, 0.45, 0.25, 1
-                    text_color: 0.08, 0.45, 0.25, 1
-                    pos_hint: {"center_x": .5}
-                    size_hint_x: 1
-                    on_release: root.ir_a_registro_empleado()
-
-            # Pie de página
-            MDCard:
-                padding: dp(12)
-                radius: [10,]
-                elevation: 0
-                md_bg_color: 0.9, 0.94, 0.91, 1
-                size_hint_y: None
-                height: self.minimum_height
-
-                MDBoxLayout:
+                # Grid con las 4 tarjetas de métricas
+                MDGridLayout:
+                    cols: 2
                     spacing: dp(12)
                     size_hint_y: None
                     height: self.minimum_height
 
-                    MDIcon:
-                        icon: "shield-check"
-                        font_size: "26sp"
-                        theme_text_color: "Custom"
-                        text_color: 0.08, 0.45, 0.25, 1
-
-                    MDBoxLayout:
+                    # Tarjeta 1: Total Productos
+                    MDCard:
                         orientation: 'vertical'
+                        padding: dp(16)
+                        spacing: dp(8)
+                        radius: [12,]
+                        elevation: 1
                         size_hint_y: None
-                        height: self.minimum_height
+                        height: dp(100)
+
+                        MDBoxLayout:
+                            spacing: dp(8)
+                            size_hint_y: None
+                            height: dp(24)
+
+                            MDIcon:
+                                icon: "package-variant-closed"
+                                font_size: "20sp"
+                                theme_text_color: "Custom"
+                                text_color: 0.08, 0.45, 0.25, 1
+
+                            MDLabel:
+                                text: "Total Productos"
+                                font_style: "Caption"
+                                theme_text_color: "Hint"
 
                         MDLabel:
-                            text: "Acceso seguro al sistema"
-                            font_style: "Subtitle2"
+                            text: str(root.total_productos)
+                            font_style: "H4"
                             bold: True
+
+                    # Tarjeta 2: Stock Bajo
+                    MDCard:
+                        orientation: 'vertical'
+                        padding: dp(16)
+                        spacing: dp(8)
+                        radius: [12,]
+                        elevation: 1
+                        size_hint_y: None
+                        height: dp(100)
+
+                        MDBoxLayout:
+                            spacing: dp(8)
                             size_hint_y: None
-                            height: dp(18)
+                            height: dp(24)
+
+                            MDIcon:
+                                icon: "alert-outline"
+                                font_size: "20sp"
+                                theme_text_color: "Custom"
+                                text_color: 0.85, 0.4, 0.0, 1
+
+                            MDLabel:
+                                text: "Stock Bajo"
+                                font_style: "Caption"
+                                theme_text_color: "Hint"
 
                         MDLabel:
-                            text: "Solo usuarios autorizados"
-                            font_style: "Caption"
-                            theme_text_color: "Hint"
+                            text: str(root.stock_bajo)
+                            font_style: "H4"
+                            bold: True
+                            theme_text_color: "Custom"
+                            text_color: 0.85, 0.4, 0.0, 1
+
+                    # Tarjeta 3: Por Vencer
+                    MDCard:
+                        orientation: 'vertical'
+                        padding: dp(16)
+                        spacing: dp(8)
+                        radius: [12,]
+                        elevation: 1
+                        size_hint_y: None
+                        height: dp(100)
+
+                        MDBoxLayout:
+                            spacing: dp(8)
                             size_hint_y: None
-                            height: dp(14)
+                            height: dp(24)
+
+                            MDIcon:
+                                icon: "clock-alert-outline"
+                                font_size: "20sp"
+                                theme_text_color: "Custom"
+                                text_color: 0.9, 0.6, 0.0, 1
+
+                            MDLabel:
+                                text: "Por Vencer"
+                                font_style: "Caption"
+                                theme_text_color: "Hint"
+
+                        MDLabel:
+                            text: str(root.por_vencer)
+                            font_style: "H4"
+                            bold: True
+                            theme_text_color: "Custom"
+                            text_color: 0.9, 0.6, 0.0, 1
+
+                    # Tarjeta 4: Vencidos
+                    MDCard:
+                        orientation: 'vertical'
+                        padding: dp(16)
+                        spacing: dp(8)
+                        radius: [12,]
+                        elevation: 1
+                        size_hint_y: None
+                        height: dp(100)
+
+                        MDBoxLayout:
+                            spacing: dp(8)
+                            size_hint_y: None
+                            height: dp(24)
+
+                            MDIcon:
+                                icon: "close-circle-outline"
+                                font_size: "20sp"
+                                theme_text_color: "Error"
+
+                            MDLabel:
+                                text: "Vencidos"
+                                font_style: "Caption"
+                                theme_text_color: "Hint"
+
+                        MDLabel:
+                            text: str(root.vencidos)
+                            font_style: "H4"
+                            bold: True
+                            theme_text_color: "Error"
+
+                # Sección de accesos rápidos de gerencia
+                MDCard:
+                    orientation: 'vertical'
+                    padding: dp(16)
+                    spacing: dp(12)
+                    radius: [12,]
+                    elevation: 1
+                    size_hint_y: None
+                    height: self.minimum_height
+
+                    MDLabel:
+                        text: "Acciones Rápidas"
+                        font_style: "Subtitle1"
+                        bold: True
+                        size_hint_y: None
+                        height: dp(24)
+
+                    MDRaisedButton:
+                        text: "Cerrar Sesión"
+                        icon: "logout"
+                        md_bg_color: 0.8, 0.2, 0.2, 1
+                        pos_hint: {"center_x": .5}
+                        size_hint_x: 1
+                        on_release: root.cerrar_sesion()
