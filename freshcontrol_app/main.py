@@ -6,6 +6,7 @@ APP_DIR = os.path.dirname(os.path.abspath(__file__))
 if APP_DIR not in sys.path:
     sys.path.insert(0, APP_DIR)
 
+from kivy.core.window import Window
 from kivymd.app import MDApp
 from kivymd.uix.screenmanager import MDScreenManager
 from kivymd.uix.screen import MDScreen
@@ -320,6 +321,9 @@ class FreshControlApp(MDApp):
     usuario_activo = {}
 
     def build(self):
+        # Establece un color de fondo sólido claro por defecto para evitar transparencias
+        Window.clearcolor = (0.95, 0.96, 0.96, 1)
+
         inicializar_bd()
 
         sm = MDScreenManager()
