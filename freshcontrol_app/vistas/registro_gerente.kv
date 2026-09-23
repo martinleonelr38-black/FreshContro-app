@@ -69,22 +69,25 @@
                     hint_text: "Ingrese el nombre"
                     icon_left: "account-outline"
                     mode: "rectangle"
+                    helper_text_mode: "on_error"
 
                 MDTextField:
                     id: apellido_field
                     hint_text: "Ingrese el apellido"
                     icon_left: "account-outline"
                     mode: "rectangle"
+                    helper_text_mode: "on_error"
 
                 MDTextField:
                     id: usuario_field
                     hint_text: "Ingrese el usuario"
                     icon_left: "account-box-outline"
                     mode: "rectangle"
+                    helper_text_mode: "on_error"
 
                 RelativeLayout:
                     size_hint_y: None
-                    height: dp(60)
+                    height: dp(68)
 
                     MDTextField:
                         id: password_field
@@ -92,17 +95,18 @@
                         icon_left: "lock-outline"
                         password: True
                         mode: "rectangle"
+                        helper_text_mode: "on_error"
                         pos_hint: {"center_x": 0.5, "center_y": 0.5}
 
                     MDIconButton:
                         icon: "eye-off"
-                        pos_hint: {"right": 0.98, "center_y": 0.4}
+                        pos_hint: {"right": 0.98, "center_y": 0.5}
                         theme_text_color: "Hint"
                         on_release: root.toggle_password_visibility(self, password_field)
 
                 RelativeLayout:
                     size_hint_y: None
-                    height: dp(60)
+                    height: dp(68)
 
                     MDTextField:
                         id: confirm_password_field
@@ -110,11 +114,12 @@
                         icon_left: "lock-outline"
                         password: True
                         mode: "rectangle"
+                        helper_text_mode: "on_error"
                         pos_hint: {"center_x": 0.5, "center_y": 0.5}
 
                     MDIconButton:
                         icon: "eye-off"
-                        pos_hint: {"right": 0.98, "center_y": 0.4}
+                        pos_hint: {"right": 0.98, "center_y": 0.5}
                         theme_text_color: "Hint"
                         on_release: root.toggle_password_visibility(self, confirm_password_field)
 
@@ -123,18 +128,20 @@
                     hint_text: "Ingrese el correo electrónico"
                     icon_left: "email-outline"
                     mode: "rectangle"
+                    helper_text_mode: "on_error"
 
                 MDTextField:
                     id: telefono_field
                     hint_text: "Ingrese el teléfono"
                     icon_left: "phone-outline"
                     mode: "rectangle"
+                    helper_text_mode: "on_error"
 
                 MDLabel:
                     id: mensaje_error
                     text: ""
                     font_style: "Caption"
-                    halign: "center"
+                    halign: "left"
                     theme_text_color: "Custom"
                     text_color: 0.9, 0.1, 0.1, 1
                     size_hint_y: None

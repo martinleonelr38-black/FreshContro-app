@@ -1,7 +1,7 @@
 import os
 import sys
 
-# Agregar la carpeta base al path para evitar errores de importación
+# Agregar la carpeta base al path para importar el gestor
 APP_DIR = os.path.dirname(os.path.abspath(__file__))
 if APP_DIR not in sys.path:
     sys.path.insert(0, APP_DIR)
@@ -10,9 +10,15 @@ from kivymd.app import MDApp
 from kivymd.uix.screenmanager import MDScreenManager
 from kivymd.uix.screen import MDScreen
 from kivy.lang import Builder
+from kivy.properties import StringProperty, NumericProperty
 
-# Importar funciones de base de datos
-from base_de_datos.gestor_bd import inicializar_bd, registrar_usuario, verificar_credenciales
+# Importar funciones del gestor de base de datos
+from base_de_datos.gestor_bd import (
+    inicializar_bd,
+    registrar_usuario,
+    verificar_credenciales,
+    obtener_metricas_dashboard
+)
 
 # Cargar archivos KV
 VISTAS_DIR = os.path.join(APP_DIR, "vistas")
@@ -38,18 +44,26 @@ class PantallaInicioSesion(MDScreen):
             label_error.text = "Por favor ingrese usuario y contraseña"
             return
 
+        # Consultar credenciales en SQLite
         usuario_db = verificar_credenciales(usuario, password)
 
         if usuario_db:
             label_error.text = ""
             self.ids.usuario_field.text = ""
             self.ids.password_field.text = ""
-            
+
+            # Guardar el usuario en la app global
+            app = MDApp.get_running_app()
+            app.usuario_activo = dict(usuario_db)
+
+            # Redirección según el ROL guardado en la BD
             rol = usuario_db["rol"].lower()
             if rol == "gerente":
                 self.manager.current = "panel_gerente"
             elif rol == "empleado":
                 self.manager.current = "panel_empleado"
+            else:
+                label_error.text = f"Rol de usuario desconocido: {rol}"
         else:
             label_error.text = "Usuario o contraseña incorrectos"
 
@@ -70,42 +84,71 @@ class PantallaRegistroGerente(MDScreen):
         button.icon = "eye" if not field.password else "eye-off"
 
     def guardar_gerente(self):
-        label_error = self.ids.mensaje_error
-        nombre = self.ids.nombre_field.text.strip()
-        apellido = self.ids.apellido_field.text.strip()
-        usuario = self.ids.usuario_field.text.strip()
-        password = self.ids.password_field.text.strip()
-        confirm_password = self.ids.confirm_password_field.text.strip()
-        email = self.ids.email_field.text.strip()
-        telefono = self.ids.telefono_field.text.strip()
+        campos = [
+            self.ids.nombre_field,
+            self.ids.apellido_field,
+            self.ids.usuario_field,
+            self.ids.password_field,
+            self.ids.confirm_password_field,
+            self.ids.email_field,
+            self.ids.telefono_field
+        ]
 
-        if not all([nombre, apellido, usuario, password, confirm_password, email, telefono]):
-            label_error.text = "Por favor complete todos los datos"
+        for campo in campos:
+            campo.error = False
+            campo.helper_text = ""
+
+        if hasattr(self.ids, 'mensaje_error'):
+            self.ids.mensaje_error.text = ""
+
+        hay_vacios = False
+        for campo in campos:
+            if not campo.text.strip():
+                campo.error = True
+                campo.helper_text = "Este campo es obligatorio"
+                hay_vacios = True
+
+        if hay_vacios:
             return
 
-        if password != confirm_password:
-            label_error.text = "Las contraseñas no coinciden"
+        if self.ids.password_field.text.strip() != self.ids.confirm_password_field.text.strip():
+            self.ids.confirm_password_field.error = True
+            self.ids.confirm_password_field.helper_text = "Las contraseñas no coinciden"
             return
 
         exito, msg = registrar_usuario(
-            nombre, apellido, usuario, password, email, telefono, cargo="Gerente General", rol="gerente"
+            self.ids.nombre_field.text.strip(),
+            self.ids.apellido_field.text.strip(),
+            self.ids.usuario_field.text.strip(),
+            self.ids.password_field.text.strip(),
+            self.ids.email_field.text.strip(),
+            self.ids.telefono_field.text.strip(),
+            cargo="Gerente General",
+            rol="gerente"
         )
 
         if exito:
-            label_error.text = ""
             self.limpiar_campos()
             self.manager.current = "inicio_sesion"
         else:
-            label_error.text = msg
+            if hasattr(self.ids, 'mensaje_error'):
+                self.ids.mensaje_error.text = msg
 
     def limpiar_campos(self):
-        self.ids.nombre_field.text = ""
-        self.ids.apellido_field.text = ""
-        self.ids.usuario_field.text = ""
-        self.ids.password_field.text = ""
-        self.ids.confirm_password_field.text = ""
-        self.ids.email_field.text = ""
-        self.ids.telefono_field.text = ""
+        campos = [
+            self.ids.nombre_field,
+            self.ids.apellido_field,
+            self.ids.usuario_field,
+            self.ids.password_field,
+            self.ids.confirm_password_field,
+            self.ids.email_field,
+            self.ids.telefono_field
+        ]
+        for campo in campos:
+            campo.text = ""
+            campo.error = False
+            campo.helper_text = ""
+
         if hasattr(self.ids, 'mensaje_error'):
             self.ids.mensaje_error.text = ""
 
@@ -120,44 +163,73 @@ class PantallaRegistroEmpleado(MDScreen):
         button.icon = "eye" if not field.password else "eye-off"
 
     def guardar_empleado(self):
-        label_error = self.ids.mensaje_error
-        nombre = self.ids.nombre_field.text.strip()
-        apellido = self.ids.apellido_field.text.strip()
-        usuario = self.ids.usuario_field.text.strip()
-        password = self.ids.password_field.text.strip()
-        confirm_password = self.ids.confirm_password_field.text.strip()
-        email = self.ids.email_field.text.strip()
-        telefono = self.ids.telefono_field.text.strip()
-        cargo = self.ids.cargo_field.text.strip()
+        campos = [
+            self.ids.nombre_field,
+            self.ids.apellido_field,
+            self.ids.usuario_field,
+            self.ids.password_field,
+            self.ids.confirm_password_field,
+            self.ids.email_field,
+            self.ids.telefono_field,
+            self.ids.cargo_field
+        ]
 
-        if not all([nombre, apellido, usuario, password, confirm_password, email, telefono, cargo]):
-            label_error.text = "Por favor complete todos los datos"
+        for campo in campos:
+            campo.error = False
+            campo.helper_text = ""
+
+        if hasattr(self.ids, 'mensaje_error'):
+            self.ids.mensaje_error.text = ""
+
+        hay_vacios = False
+        for campo in campos:
+            if not campo.text.strip():
+                campo.error = True
+                campo.helper_text = "Este campo es obligatorio"
+                hay_vacios = True
+
+        if hay_vacios:
             return
 
-        if password != confirm_password:
-            label_error.text = "Las contraseñas no coinciden"
+        if self.ids.password_field.text.strip() != self.ids.confirm_password_field.text.strip():
+            self.ids.confirm_password_field.error = True
+            self.ids.confirm_password_field.helper_text = "Las contraseñas no coinciden"
             return
 
         exito, msg = registrar_usuario(
-            nombre, apellido, usuario, password, email, telefono, cargo=cargo, rol="empleado"
+            self.ids.nombre_field.text.strip(),
+            self.ids.apellido_field.text.strip(),
+            self.ids.usuario_field.text.strip(),
+            self.ids.password_field.text.strip(),
+            self.ids.email_field.text.strip(),
+            self.ids.telefono_field.text.strip(),
+            cargo=self.ids.cargo_field.text.strip(),
+            rol="empleado"
         )
 
         if exito:
-            label_error.text = ""
             self.limpiar_campos()
             self.manager.current = "inicio_sesion"
         else:
-            label_error.text = msg
+            if hasattr(self.ids, 'mensaje_error'):
+                self.ids.mensaje_error.text = msg
 
     def limpiar_campos(self):
-        self.ids.nombre_field.text = ""
-        self.ids.apellido_field.text = ""
-        self.ids.usuario_field.text = ""
-        self.ids.password_field.text = ""
-        self.ids.confirm_password_field.text = ""
-        self.ids.email_field.text = ""
-        self.ids.telefono_field.text = ""
-        self.ids.cargo_field.text = ""
+        campos = [
+            self.ids.nombre_field,
+            self.ids.apellido_field,
+            self.ids.usuario_field,
+            self.ids.password_field,
+            self.ids.confirm_password_field,
+            self.ids.email_field,
+            self.ids.telefono_field,
+            self.ids.cargo_field
+        ]
+        for campo in campos:
+            campo.text = ""
+            campo.error = False
+            campo.helper_text = ""
+
         if hasattr(self.ids, 'mensaje_error'):
             self.ids.mensaje_error.text = ""
 
@@ -167,50 +239,53 @@ class PantallaRegistroEmpleado(MDScreen):
 
 
 class PantallaPanelEmpleado(MDScreen):
-    def toggle_nav_drawer(self):
-        pass
+    nombre_empleado = StringProperty("Empleado")
+
+    def on_pre_enter(self, *args):
+        app = MDApp.get_running_app()
+        if app.usuario_activo:
+            self.nombre_empleado = f"{app.usuario_activo.get('nombre', '')} {app.usuario_activo.get('apellido', '')}"
 
     def ir_a_escaner(self):
         self.manager.current = "escaner"
 
     def cerrar_sesion(self):
+        MDApp.get_running_app().usuario_activo = {}
         self.manager.current = "inicio_sesion"
 
 
 class PantallaPanelGerente(MDScreen):
-    def toggle_nav_drawer(self):
-        pass
+    total_productos = NumericProperty(0)
+    stock_bajo = NumericProperty(0)
+    por_vencer = NumericProperty(0)
+    vencidos = NumericProperty(0)
+    nombre_gerente = StringProperty("Gerente")
 
-    def ver_inventario(self):
-        pass
+    def on_pre_enter(self, *args):
+        app = MDApp.get_running_app()
+        if app.usuario_activo:
+            self.nombre_gerente = f"{app.usuario_activo.get('nombre', '')} {app.usuario_activo.get('apellido', '')}"
 
-    def agregar_producto(self):
-        pass
-
-    def gestionar_empleados(self):
-        pass
-
-    def ver_reportes(self):
-        self.manager.current = "escaner"
+        metricas = obtener_metricas_dashboard()
+        self.total_productos = metricas["total_productos"]
+        self.stock_bajo = metricas["stock_bajo"]
+        self.por_vencer = metricas["por_vencer"]
+        self.vencidos = metricas["vencidos"]
 
     def cerrar_sesion(self):
+        MDApp.get_running_app().usuario_activo = {}
         self.manager.current = "inicio_sesion"
 
 
 class PantallaEscaner(MDScreen):
-    def procesar_codigo(self):
-        self.manager.current = "panel_gerente"
-
-    def volver(self):
-        self.manager.current = "panel_gerente"
+    pass
 
 
 class FreshControlApp(MDApp):
+    usuario_activo = {}
+
     def build(self):
         inicializar_bd()
-
-        self.theme_cls.primary_palette = "Green"
-        self.theme_cls.theme_style = "Light"
 
         sm = MDScreenManager()
         sm.add_widget(PantallaInicioSesion(name="inicio_sesion"))
