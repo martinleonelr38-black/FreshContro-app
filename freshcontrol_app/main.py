@@ -240,14 +240,41 @@ class PantallaRegistroEmpleado(MDScreen):
 
 class PantallaPanelEmpleado(MDScreen):
     nombre_empleado = StringProperty("Empleado")
+    total_productos = NumericProperty(0)
+    stock_bajo = NumericProperty(0)
 
     def on_pre_enter(self, *args):
+        """Carga los datos del usuario activo y las métricas al ingresar."""
         app = MDApp.get_running_app()
         if app.usuario_activo:
-            self.nombre_empleado = f"{app.usuario_activo.get('nombre', '')} {app.usuario_activo.get('apellido', '')}"
+            self.nombre_empleado = f"{app.usuario_activo.get('nombre', '')} {app.usuario_activo.get('apellido', '')}".strip() or "Empleado"
+        
+        self.actualizar_metricas()
+
+    def actualizar_metricas(self):
+        """Obtiene las métricas de inventario desde SQLite."""
+        try:
+            metricas = obtener_metricas_dashboard()
+            self.total_productos = metricas.get("total_productos", 0)
+            self.stock_bajo = metricas.get("stock_bajo", 0)
+        except Exception as e:
+            print(f"Error cargando métricas en panel empleado: {e}")
+
+    def toggle_nav_drawer(self):
+        print("Abriendo menú lateral...")
+
+    def registrar_entrada(self):
+        print("Navegando a registrar entrada...")
+
+    def registrar_salida(self):
+        print("Navegando a registrar salida...")
 
     def ir_a_escaner(self):
-        self.manager.current = "escaner"
+        if "escaner" in self.manager.screen_names:
+            self.manager.current = "escaner"
+
+    def buscar_producto(self):
+        print("Navegando a buscar producto...")
 
     def cerrar_sesion(self):
         MDApp.get_running_app().usuario_activo = {}
@@ -262,15 +289,23 @@ class PantallaPanelGerente(MDScreen):
     nombre_gerente = StringProperty("Gerente")
 
     def on_pre_enter(self, *args):
+        """Carga los datos del gerente activo y refresca el tablero de métricas."""
         app = MDApp.get_running_app()
         if app.usuario_activo:
-            self.nombre_gerente = f"{app.usuario_activo.get('nombre', '')} {app.usuario_activo.get('apellido', '')}"
+            self.nombre_gerente = f"{app.usuario_activo.get('nombre', '')} {app.usuario_activo.get('apellido', '')}".strip() or "Gerente"
 
-        metricas = obtener_metricas_dashboard()
-        self.total_productos = metricas["total_productos"]
-        self.stock_bajo = metricas["stock_bajo"]
-        self.por_vencer = metricas["por_vencer"]
-        self.vencidos = metricas["vencidos"]
+        self.actualizar_metricas()
+
+    def actualizar_metricas(self):
+        """Obtiene todas las métricas operativas de la BD."""
+        try:
+            metricas = obtener_metricas_dashboard()
+            self.total_productos = metricas.get("total_productos", 0)
+            self.stock_bajo = metricas.get("stock_bajo", 0)
+            self.por_vencer = metricas.get("por_vencer", 0)
+            self.vencidos = metricas.get("vencidos", 0)
+        except Exception as e:
+            print(f"Error cargando métricas en panel gerente: {e}")
 
     def cerrar_sesion(self):
         MDApp.get_running_app().usuario_activo = {}
