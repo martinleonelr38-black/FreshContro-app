@@ -1,31 +1,18 @@
-from base_de_datos.gestor_bd import GestorBD
+from base_de_datos.gestor_bd import GestorBD, registrar_usuario, verificar_credenciales
+
 
 class ControladorAuth:
     def __init__(self):
         self.bd = GestorBD()
 
-    def registrar_empleado(self, nombre, cargo, usuario, contrasena):
-        """
-        Registra un empleado o gerente en la base de datos.
-        Retorna True si se guardó correctamente.
-        """
-        sql = """
-            INSERT INTO empleados (nombre, cargo, usuario, contrasena)
-            VALUES (?, ?, ?, ?)
-        """
-        return self.bd.ejecutar_comando(sql, (nombre, cargo, usuario, contrasena))
+    def registrar_usuario(self, nombre, apellido, usuario, password, email, telefono, cargo="Empleado", rol="empleado"):
+        """Registra gerente o empleado usando la lógica central de la base de datos."""
+        return registrar_usuario(nombre, apellido, usuario, password, email, telefono, cargo, rol)
 
-    def verificar_login(self, usuario, contrasena):
-        """
-        Valida las credenciales contra la tabla empleados.
-        Retorna una tupla (id_empleado, nombre, cargo) si es correcto, o None si falla.
-        """
-        sql = """
-            SELECT id_empleado, nombre, cargo 
-            FROM empleados 
-            WHERE usuario = ? AND contrasena = ?
-        """
-        resultados = self.bd.ejecutar_consulta(sql, (usuario, contrasena))
-        if resultados:
-            return resultados[0]  # Ejemplo: (1, 'Juan Perez', 'Gerente')
-        return None
+    def verificar_login(self, usuario, password):
+        """Valida usuario y contraseña en las tablas de gerente y empleado."""
+        return verificar_credenciales(usuario, password)
+
+    def registrar_empleado(self, nombre, cargo, usuario, contrasena):
+        """Método legado para compatibilidad con versiones anteriores del proyecto."""
+        return registrar_usuario(nombre, "", usuario, contrasena, "", "", cargo, "empleado")

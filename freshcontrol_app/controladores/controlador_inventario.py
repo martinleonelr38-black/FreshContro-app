@@ -5,14 +5,14 @@ class ControladorInventario:
     def __init__(self):
         self.bd = GestorBD()
 
-    def registrar_producto(self, codigo_barras, nombre, categoria, cantidad, unidad, fecha_ven, id_proveedor=None):
-        """ Registra un nuevo producto en la base de datos """
+    def registrar_producto(self, codigo_barras, nombre, categoria, cantidad, unidad, fecha_ven, id_proveedor=None, pasillo="A", imagen=""):
+        """Registra un nuevo producto en la base de datos."""
         fecha_ingreso = date.today().isoformat()
         sql = """
-            INSERT INTO productos (codigo_barras, nombre, categoria, cantidad_stock, unidad_medida, fecha_ingreso, fecha_vencimiento, id_proveedor)
+            INSERT INTO productos (codigo_barras, nombre, categoria, cantidad_stock, fecha_vencimiento, id_proveedor, pasillo, imagen)
             VALUES (?, ?, ?, ?, ?, ?, ?, ?)
         """
-        return self.bd.ejecutar_comando(sql, (codigo_barras, nombre, categoria, cantidad, unidad, fecha_ingreso, fecha_ven, id_proveedor))
+        return self.bd.ejecutar_comando(sql, (codigo_barras, nombre, categoria, cantidad, fecha_ven, id_proveedor, pasillo, imagen))
 
     def obtener_productos(self):
         """ Devuelve el listado completo de productos """

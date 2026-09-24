@@ -1,169 +1,175 @@
 <PantallaInicioSesion>:
     md_bg_color: 0.95, 0.96, 0.96, 1
 
-    ScrollView:
-        do_scroll_x: False
+    canvas.before:
+        Color:
+            rgba: 0.95, 0.96, 0.96, 1
+        Rectangle:
+            pos: self.pos
+            size: self.size
+
+    MDBoxLayout:
+        orientation: 'vertical'
+        padding: [dp(20), dp(20), dp(20), dp(20)]
+        spacing: dp(15)
+        size_hint: 1, 1
+        pos_hint: {"center_x": 0.5, "center_y": 0.5}
+
+        # Encabezado (Logo + Subtítulo)
         MDBoxLayout:
             orientation: 'vertical'
-            padding: [dp(20), dp(20), dp(20), dp(20)]
-            spacing: dp(15)
+            size_hint_y: None
+            height: dp(60)
+            spacing: dp(2)
+
+            MDLabel:
+                text: "FreshControl"
+                font_style: "H4"
+                bold: True
+                halign: "center"
+                theme_text_color: "Custom"
+                text_color: 0.08, 0.45, 0.25, 1
+                size_hint_y: None
+                height: dp(40)
+
+            MDLabel:
+                text: "Control inteligente de inventario"
+                font_style: "Caption"
+                halign: "center"
+                theme_text_color: "Hint"
+                size_hint_y: None
+                height: dp(18)
+
+        # Tarjeta de Formulario Principal
+        MDCard:
+            orientation: 'vertical'
+            padding: dp(20)
+            spacing: dp(12)
+            radius: [15,]
+            elevation: 2
             size_hint_y: None
             height: self.minimum_height
             pos_hint: {"center_x": 0.5}
 
-            # Encabezado (Logo + Subtítulo)
             MDBoxLayout:
-                orientation: 'vertical'
                 size_hint_y: None
-                height: dp(60)
-                spacing: dp(2)
-
-                MDLabel:
-                    text: "FreshControl"
-                    font_style: "H4"
-                    bold: True
-                    halign: "center"
-                    theme_text_color: "Custom"
-                    text_color: 0.08, 0.45, 0.25, 1
-                    size_hint_y: None
-                    height: dp(40)
-
-                MDLabel:
-                    text: "Control inteligente de inventario"
-                    font_style: "Caption"
-                    halign: "center"
-                    theme_text_color: "Hint"
-                    size_hint_y: None
-                    height: dp(18)
-
-            # Tarjeta de Formulario Principal
-            MDCard:
-                orientation: 'vertical'
-                padding: dp(20)
-                spacing: dp(12)
-                radius: [15,]
-                elevation: 2
-                size_hint_y: None
-                height: self.minimum_height
+                height: dp(30)
+                spacing: dp(10)
                 pos_hint: {"center_x": 0.5}
 
-                MDBoxLayout:
-                    size_hint_y: None
-                    height: dp(30)
-                    spacing: dp(10)
-                    pos_hint: {"center_x": 0.5}
-
-                    MDIcon:
-                        icon: "account"
-                        font_size: "24sp"
-                        theme_text_color: "Custom"
-                        text_color: 0.08, 0.45, 0.25, 1
-
-                    MDLabel:
-                        text: "Iniciar Sesión"
-                        font_style: "H6"
-                        bold: True
-
-                # Mensaje de Error
-                MDLabel:
-                    id: mensaje_error
-                    text: ""
-                    font_style: "Caption"
-                    bold: True
-                    halign: "center"
+                MDIcon:
+                    icon: "account"
+                    font_size: "24sp"
                     theme_text_color: "Custom"
-                    text_color: 0.8, 0.2, 0.2, 1
-                    size_hint_y: None
-                    height: dp(20) if self.text else 0
+                    text_color: 0.08, 0.45, 0.25, 1
+
+                MDLabel:
+                    text: "Iniciar Sesión"
+                    font_style: "H6"
+                    bold: True
+
+            # Mensaje de Error
+            MDLabel:
+                id: mensaje_error
+                text: ""
+                font_style: "Caption"
+                bold: True
+                halign: "center"
+                theme_text_color: "Custom"
+                text_color: 0.8, 0.2, 0.2, 1
+                size_hint_y: None
+                height: dp(20) if self.text else 0
+
+            MDTextField:
+                id: usuario_field
+                hint_text: "Ingrese su usuario"
+                icon_left: "account-outline"
+                mode: "rectangle"
+
+            RelativeLayout:
+                size_hint_y: None
+                height: dp(60)
 
                 MDTextField:
-                    id: usuario_field
-                    hint_text: "Ingrese su usuario"
-                    icon_left: "account-outline"
+                    id: password_field
+                    hint_text: "Ingrese su contraseña"
+                    icon_left: "lock-outline"
+                    password: True
                     mode: "rectangle"
+                    pos_hint: {"center_x": 0.5, "center_y": 0.5}
 
-                RelativeLayout:
-                    size_hint_y: None
-                    height: dp(60)
+                MDIconButton:
+                    icon: "eye-off"
+                    pos_hint: {"right": 0.98, "center_y": 0.4}
+                    theme_text_color: "Hint"
+                    on_release: root.toggle_password_visibility(self, password_field)
 
-                    MDTextField:
-                        id: password_field
-                        hint_text: "Ingrese su contraseña"
-                        icon_left: "lock-outline"
-                        password: True
-                        mode: "rectangle"
-                        pos_hint: {"center_x": 0.5, "center_y": 0.5}
+            MDRaisedButton:
+                text: "Iniciar Sesión"
+                icon: "lock-open-outline"
+                md_bg_color: 0.08, 0.45, 0.25, 1
+                pos_hint: {"center_x": .5}
+                size_hint_x: 1
+                elevation: 1
+                on_release: root.iniciar_sesion()
 
-                    MDIconButton:
-                        icon: "eye-off"
-                        pos_hint: {"right": 0.98, "center_y": 0.4}
-                        theme_text_color: "Hint"
-                        on_release: root.toggle_password_visibility(self, password_field)
+            MDRectangleFlatIconButton:
+                text: "Registrar como Gerente"
+                icon: "crown-outline"
+                line_color: 0.08, 0.45, 0.25, 1
+                icon_color: 0.08, 0.45, 0.25, 1
+                text_color: 0.08, 0.45, 0.25, 1
+                pos_hint: {"center_x": .5}
+                size_hint_x: 1
+                on_release: root.ir_a_registro_gerente()
 
-                MDRaisedButton:
-                    text: "Iniciar Sesión"
-                    icon: "lock-open-outline"
-                    md_bg_color: 0.08, 0.45, 0.25, 1
-                    pos_hint: {"center_x": .5}
-                    size_hint_x: 1
-                    elevation: 1
-                    on_release: root.iniciar_sesion()
+            MDRectangleFlatIconButton:
+                text: "Registrar como Empleado"
+                icon: "account-outline"
+                line_color: 0.08, 0.45, 0.25, 1
+                icon_color: 0.08, 0.45, 0.25, 1
+                text_color: 0.08, 0.45, 0.25, 1
+                pos_hint: {"center_x": .5}
+                size_hint_x: 1
+                on_release: root.ir_a_registro_empleado()
 
-                MDRectangleFlatIconButton:
-                    text: "Registrar como Gerente"
-                    icon: "crown-outline"
-                    line_color: 0.08, 0.45, 0.25, 1
-                    icon_color: 0.08, 0.45, 0.25, 1
-                    text_color: 0.08, 0.45, 0.25, 1
-                    pos_hint: {"center_x": .5}
-                    size_hint_x: 1
-                    on_release: root.ir_a_registro_gerente()
+        Widget:
 
-                MDRectangleFlatIconButton:
-                    text: "Registrar como Empleado"
-                    icon: "account-outline"
-                    line_color: 0.08, 0.45, 0.25, 1
-                    icon_color: 0.08, 0.45, 0.25, 1
-                    text_color: 0.08, 0.45, 0.25, 1
-                    pos_hint: {"center_x": .5}
-                    size_hint_x: 1
-                    on_release: root.ir_a_registro_empleado()
+        # Pie de página
+        MDCard:
+            padding: dp(12)
+            radius: [10,]
+            elevation: 0
+            md_bg_color: 0.9, 0.94, 0.91, 1
+            size_hint_y: None
+            height: self.minimum_height
 
-            # Pie de página
-            MDCard:
-                padding: dp(12)
-                radius: [10,]
-                elevation: 0
-                md_bg_color: 0.9, 0.94, 0.91, 1
+            MDBoxLayout:
+                spacing: dp(12)
                 size_hint_y: None
                 height: self.minimum_height
 
+                MDIcon:
+                    icon: "shield-check"
+                    font_size: "26sp"
+                    theme_text_color: "Custom"
+                    text_color: 0.08, 0.45, 0.25, 1
+
                 MDBoxLayout:
-                    spacing: dp(12)
+                    orientation: 'vertical'
                     size_hint_y: None
                     height: self.minimum_height
 
-                    MDIcon:
-                        icon: "shield-check"
-                        font_size: "26sp"
-                        theme_text_color: "Custom"
-                        text_color: 0.08, 0.45, 0.25, 1
-
-                    MDBoxLayout:
-                        orientation: 'vertical'
+                    MDLabel:
+                        text: "Acceso seguro al sistema"
+                        font_style: "Subtitle2"
+                        bold: True
                         size_hint_y: None
-                        height: self.minimum_height
+                        height: dp(18)
 
-                        MDLabel:
-                            text: "Acceso seguro al sistema"
-                            font_style: "Subtitle2"
-                            bold: True
-                            size_hint_y: None
-                            height: dp(18)
-
-                        MDLabel:
-                            text: "Solo usuarios autorizados"
-                            font_style: "Caption"
-                            theme_text_color: "Hint"
-                            size_hint_y: None
-                            height: dp(14)
+                    MDLabel:
+                        text: "Solo usuarios autorizados"
+                        font_style: "Caption"
+                        theme_text_color: "Hint"
+                        size_hint_y: None
+                        height: dp(14)

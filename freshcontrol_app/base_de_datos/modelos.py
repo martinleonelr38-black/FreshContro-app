@@ -1,4 +1,10 @@
-from base_de_datos.gestor_bd import GestorBD
+import sys
+import os
+
+# Agrega la carpeta actual al path para importar gestor_bd directamente
+sys.path.append(os.path.dirname(os.path.abspath(__file__)))
+from gestor_bd import GestorBD
+
 
 def inicializar_tablas():
     bd = GestorBD()
@@ -18,9 +24,13 @@ def inicializar_tablas():
     CREATE TABLE IF NOT EXISTS empleados (
         id_empleado INTEGER PRIMARY KEY AUTOINCREMENT,
         nombre TEXT NOT NULL,
-        cargo TEXT NOT NULL,
+        apellido TEXT NOT NULL,
         usuario TEXT UNIQUE NOT NULL,
-        contrasena TEXT NOT NULL
+        password TEXT NOT NULL,
+        email TEXT NOT NULL,
+        telefono TEXT NOT NULL,
+        cargo TEXT,
+        rol TEXT NOT NULL
     );
     """)
     

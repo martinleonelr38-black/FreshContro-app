@@ -1,61 +1,152 @@
-<EscanerVista>:
-    md_bg_color: 0.1, 0.1, 0.1, 1
+<PantallaEscaner>:
+    md_bg_color: 0.96, 0.97, 0.97, 1
 
     MDBoxLayout:
-        orientation: 'vertical'
+        orientation: "vertical"
+        padding: [dp(28), dp(24), dp(28), dp(24)]
+        spacing: dp(14)
 
-        # Toolbar Superior
         MDTopAppBar:
-            title: "Escanear Código de Barras"
+            title: "Escáner de producto"
+            elevation: 1
             left_action_items: [["arrow-left", lambda x: root.volver()]]
-            md_bg_color: 0.08, 0.45, 0.25, 1
+            md_bg_color: 0.02, 0.43, 0.23, 1
             specific_text_color: 1, 1, 1, 1
+            size_hint_y: None
+            height: dp(56)
 
-        # Área de visor/cámara para el escáner
-        RelativeLayout:
-            MDCard:
-                size_hint: 0.8, 0.5
-                pos_hint: {"center_x": 0.5, "center_y": 0.5}
-                md_bg_color: 0.2, 0.2, 0.2, 0.8
-                radius: [15,]
+        Widget:
 
+        MDCard:
+            orientation: "vertical"
+            padding: dp(24)
+            spacing: dp(14)
+            radius: [14,]
+            elevation: 2
+            size_hint_x: .82
+            size_hint_y: None
+            height: dp(440)
+            pos_hint: {"center_x": .5}
+
+            MDBoxLayout:
+                size_hint_y: None
+                height: dp(42)
+                spacing: dp(12)
+                MDIcon:
+                    icon: "barcode-scan"
+                    font_size: "32sp"
+                    theme_text_color: "Custom"
+                    text_color: 0.02, 0.43, 0.23, 1
                 MDBoxLayout:
-                    orientation: 'vertical'
-                    padding: dp(20)
-                    spacing: dp(15)
-
-                    MDIcon:
-                        icon: "barcode-scan"
-                        font_size: "72sp"
-                        halign: "center"
-                        theme_text_color: "Custom"
-                        text_color: 0.08, 0.7, 0.35, 1
-
+                    orientation: "vertical"
                     MDLabel:
-                        text: "Apunta la cámara al código de barras del producto"
-                        halign: "center"
-                        theme_text_color: "Custom"
-                        text_color: 1, 1, 1, 1
-                        font_style: "Body1"
+                        text: "Producto escaneado"
+                        font_style: "H6"
+                        bold: True
+                    MDLabel:
+                        text: "Revisa la información antes de guardarlo"
+                        font_style: "Caption"
+                        theme_text_color: "Hint"
 
-        # Acciones y simulación de lectura
-        MDBoxLayout:
-            orientation: 'vertical'
-            padding: dp(20)
-            spacing: dp(10)
-            adaptive_height: True
+            MDSeparator:
 
-            MDRaisedButton:
-                text: "Simular Lectura de Código"
-                icon: "camera"
-                md_bg_color: 0.08, 0.45, 0.25, 1
-                pos_hint: {"center_x": .5}
-                size_hint_x: 1
-                on_release: root.procesar_codigo()
+            MDGridLayout:
+                cols: 2
+                spacing: dp(10)
+                size_hint_y: None
+                height: dp(203)
+                MDLabel:
+                    text: "Producto"
+                    font_style: "Caption"
+                    theme_text_color: "Hint"
+                MDLabel:
+                    id: lbl_nombre
+                    text: "Producto no encontrado"
+                    markup: True
+                    font_style: "Body1"
+                    bold: True
+                MDLabel:
+                    text: "Total de unidades"
+                    font_style: "Caption"
+                    theme_text_color: "Hint"
+                MDLabel:
+                    id: lbl_unidades
+                    text: "0 unidades"
+                    font_style: "Subtitle2"
+                    theme_text_color: "Custom"
+                    text_color: 0.02, 0.43, 0.23, 1
+                MDLabel:
+                    text: "Unidades individuales"
+                    font_style: "Caption"
+                    theme_text_color: "Hint"
+                MDLabel:
+                    id: lbl_individuales
+                    text: "0 unidad(es)"
+                    font_style: "Body2"
+                MDLabel:
+                    text: "Tipo / Categoría"
+                    font_style: "Caption"
+                    theme_text_color: "Hint"
+                MDLabel:
+                    id: lbl_tipo
+                    text: "-"
+                    font_style: "Body2"
+                MDLabel:
+                    text: "Vencimiento"
+                    font_style: "Caption"
+                    theme_text_color: "Hint"
+                MDLabel:
+                    id: lbl_fecha
+                    text: "-"
+                    font_style: "Body2"
+                MDLabel:
+                    text: "Ubicación en almacén"
+                    font_style: "Caption"
+                    theme_text_color: "Hint"
+                MDLabel:
+                    id: lbl_ubicacion
+                    text: "Pasillo -"
+                    font_style: "Body2"
+                MDLabel:
+                    text: "Estado"
+                    font_style: "Caption"
+                    theme_text_color: "Hint"
+                MDLabel:
+                    id: lbl_dias_restantes
+                    text: "Sin producto seleccionado"
+                    font_style: "Subtitle2"
+                    theme_text_color: "Custom"
+                    text_color: 0.2, 0.2, 0.2, 1
 
-            MDFlatButton:
-                text: "Cancelar"
-                theme_text_color: "Custom"
-                text_color: 1, 1, 1, 1
-                pos_hint: {"center_x": .5}
-                on_release: root.volver()
+            Widget:
+
+            MDRectangleFlatIconButton:
+                text: "Editar datos del producto"
+                icon: "pencil-outline"
+                line_color: 0.95, 0.45, 0.05, 1
+                icon_color: 0.95, 0.45, 0.05, 1
+                text_color: 0.8, 0.32, 0.02, 1
+                size_hint_y: None
+                height: dp(42)
+                on_release: root.editar_producto()
+
+            MDBoxLayout:
+                spacing: dp(12)
+                size_hint_y: None
+                height: dp(48)
+                MDRaisedButton:
+                    text: "Guardar en almacén"
+                    icon: "content-save"
+                    md_bg_color: 0.08, 0.45, 0.25, 1
+                    size_hint_x: .55
+                    on_release: root.guardar_almacen()
+                MDRectangleFlatIconButton:
+                    text: "Volver al panel"
+                    icon: "arrow-left"
+                    line_color: 0.08, 0.45, 0.25, 1
+                    icon_color: 0.08, 0.45, 0.25, 1
+                    text_color: 0.08, 0.45, 0.25, 1
+                    size_hint_x: .45
+                    on_release: root.volver()
+
+        Widget:

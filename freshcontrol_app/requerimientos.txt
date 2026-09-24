@@ -1,3 +1,4 @@
+#instalaciones de librerias y funciones y modulos
 kivy==2.2.1
 kivymd==1.1.1
 plyer==2.1.0
@@ -8,12 +9,16 @@ reportlab==4.0.4
 openpyxl==3.1.2
 pyzbar==0.1.9
 opencv-python-headless
-# para activar la version de python :
+# Configuración y ejecución en Windows PowerShell
+# Ejecutar solo una vez para crear el entorno virtual:
 py -3.11 -m venv venv
 
-Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope Process 
+# Ejecutar en cada nueva terminal:
+Set-ExecutionPolicy -Scope Process -ExecutionPolicy RemoteSigned
+.\venv\Scripts\Activate.ps1
 
- .\venv\Scripts\Activate.ps1 
+# Con (venv) activo, iniciar la aplicación desde la carpeta raíz del proyecto:
+python .\freshcontrol_app\main.py
 
- python freshcontrol_app/main.py
+# No ejecutar nuevamente "py -3.11 -m venv venv" mientras (venv) esté activo.
 
