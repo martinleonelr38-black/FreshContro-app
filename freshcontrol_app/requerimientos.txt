@@ -1,3 +1,5 @@
+# Dependencias y comandos de ejecución del proyecto.
+# Sirve para instalar las librerías necesarias y preparar el entorno para correr FreshControl.
 #instalaciones de librerias y funciones y modulos
 kivy==2.2.1
 kivymd==1.1.1
@@ -22,3 +24,9 @@ python .\freshcontrol_app\main.py
 
 # No ejecutar nuevamente "py -3.11 -m venv venv" mientras (venv) esté activo.
 
+#usuario para ingresar despues del bloqueo 
+el mismo q se registro 
+
+#contraseña de recuperacion acceso al inicio sesion para registros  depsues de 5 errores
+
+Admin_FreshControl_Gerente

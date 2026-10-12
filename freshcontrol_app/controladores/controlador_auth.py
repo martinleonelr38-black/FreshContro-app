@@ -1,3 +1,5 @@
+# Controlador de autenticación.
+# Sirve para registrar usuarios y validar credenciales del login de empleados y gerentes.
 from base_de_datos.gestor_bd import GestorBD, registrar_usuario, verificar_credenciales
 
 

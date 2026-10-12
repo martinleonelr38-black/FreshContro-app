@@ -1,9 +1,14 @@
+# Vista del panel del gerente.
+# Sirve para centralizar indicadores, reportes y gestión del almacén.
 <PantallaPanelGerente>:
-    md_bg_color: 0.96, 0.97, 0.97, 1
+    md_bg_color: (0.08, 0.09, 0.1, 1) if app.theme_cls.theme_style == "Dark" else (0.96, 0.97, 0.97, 1)
 
     MDBoxLayout:
         orientation: "horizontal"
 
+        # =========================================================
+        # MENÚ LATERAL IZQUIERDO DEL GERENTE
+        # =========================================================
         MDCard:
             size_hint_x: None
             width: root.drawer_width
@@ -11,8 +16,9 @@
             disabled: not root.drawer_open
             radius: [0, 14, 14, 0]
             elevation: 1
-            md_bg_color: 1, 1, 1, 1
+            md_bg_color: (0.12, 0.13, 0.14, 1) if app.theme_cls.theme_style == "Dark" else (1, 1, 1, 1)
             padding: 0
+
             MDFloatLayout:
                 size_hint: 1, 1
 
@@ -20,10 +26,11 @@
                     orientation: "vertical"
                     pos_hint: {"center_x": 0.5, "center_y": 0.5}
                     size_hint: 1, 1
-                    padding: [dp(12), dp(12), dp(12), dp(12)]
-                    spacing: dp(10)
-                    md_bg_color: 1, 1, 1, 1
+                    padding: [dp(8), dp(4), dp(8), dp(8)]
+                    spacing: dp(6)
+                    md_bg_color: (0.12, 0.13, 0.14, 1) if app.theme_cls.theme_style == "Dark" else (1, 1, 1, 1)
 
+                    # ENCABEZADO FRESHCONTROL
                     MDCard:
                         size_hint_y: None
                         height: dp(72)
@@ -31,363 +38,660 @@
                         elevation: 0
                         md_bg_color: 0.02, 0.43, 0.23, 1
                         padding: [dp(10), dp(8), dp(10), dp(8)]
+
                         MDBoxLayout:
+                            orientation: "horizontal"
                             spacing: dp(8)
+                            valign: "center"
+
                             MDIcon:
                                 icon: "leaf"
                                 font_size: "30sp"
                                 theme_text_color: "Custom"
                                 text_color: 0.65, 0.9, 0.25, 1
+                                pos_hint: {"center_y": 0.5}
+
                             MDBoxLayout:
                                 orientation: "vertical"
+                                pos_hint: {"center_y": 0.5}
+
                                 MDLabel:
                                     text: "FreshControl"
                                     font_style: "H6"
                                     bold: True
                                     theme_text_color: "Custom"
                                     text_color: 1, 1, 1, 1
+
                                 MDLabel:
                                     text: "Control inteligente de inventario"
                                     font_style: "Overline"
                                     theme_text_color: "Custom"
                                     text_color: 0.8, 0.95, 0.85, 1
 
+                    # DATOS DEL GERENTE
                     MDCard:
                         size_hint_y: None
                         height: dp(78)
                         radius: [14,]
                         elevation: 0
-                        md_bg_color: 0.98, 0.99, 0.99, 1
+                        md_bg_color: (0.18, 0.2, 0.21, 1) if app.theme_cls.theme_style == "Dark" else (0.98, 0.99, 0.99, 1)
                         padding: [dp(10), dp(8), dp(10), dp(8)]
+
                         MDBoxLayout:
                             spacing: dp(10)
+
                             FloatLayout:
                                 size_hint_x: None
                                 width: dp(44)
+
                                 MDIcon:
                                     icon: "account-circle"
                                     font_size: "42sp"
                                     theme_text_color: "Custom"
-                                    text_color: 0.05, 0.35, 0.2, 1
+                                    text_color: (0.68, 0.9, 0.74, 1) if app.theme_cls.theme_style == "Dark" else (0.05, 0.35, 0.2, 1)
                                     opacity: 0 if root.avatar_path else 1
                                     pos_hint: {"center_x": .5, "center_y": .5}
-                                Image:
+
+                                FitImage:
                                     source: root.avatar_path
                                     opacity: 1 if root.avatar_path else 0
                                     allow_stretch: True
                                     keep_ratio: True
-                                    size_hint: .9, .9
+                                    size_hint: None, None
+                                    size: dp(40), dp(40)
+                                    radius: [dp(20)]
                                     pos_hint: {"center_x": .5, "center_y": .5}
+
                             MDBoxLayout:
                                 orientation: "vertical"
+                                spacing: dp(1)
+
                                 MDLabel:
                                     text: root.nombre_gerente
                                     bold: True
                                     font_style: "Subtitle2"
                                     theme_text_color: "Custom"
-                                    text_color: 0.08, 0.45, 0.25, 1
+                                    text_color: (0.68, 0.9, 0.74, 1) if app.theme_cls.theme_style == "Dark" else (0.08, 0.45, 0.25, 1)
+
                                 MDLabel:
                                     text: "Gerente general"
                                     font_style: "Caption"
                                     theme_text_color: "Hint"
-                                MDLabel:
-                                    text: "● En línea"
-                                    font_style: "Overline"
-                                    theme_text_color: "Custom"
-                                    text_color: 0.15, 0.65, 0.25, 1
+
+                                MDBoxLayout:
+                                    orientation: "horizontal"
+                                    spacing: dp(4)
+                                    size_hint_y: None
+                                    height: dp(14)
+                                    pos_hint: {"center_x": 0.5}
+
+                                    MDIcon:
+                                        icon: "checkbox-blank-circle"
+                                        font_size: "10sp"
+                                        theme_text_color: "Custom"
+                                        text_color: 0.15, 0.65, 0.25, 1
+                                        size_hint_x: None
+                                        width: dp(8)
+                                        pos_hint: {"center_y": 0.5}
+
+                                    MDLabel:
+                                        text: "En línea"
+                                        font_style: "Overline"
+                                        theme_text_color: "Custom"
+                                        text_color: 0.15, 0.65, 0.25, 1
+
+                    MDSeparator:
+
+                    # MENÚ DE OPCIONES DEL GERENTE
+                    ScrollView:
+                        do_scroll_x: False
+
+                        MDBoxLayout:
+                            orientation: "vertical"
+                            size_hint_y: None
+                            height: self.minimum_height
+                            spacing: dp(4)
+
+                            MDRectangleFlatIconButton:
+                                text: "Inicio"
+                                icon: "home"
+                                icon_color: (0.7, 0.92, 0.76, 1) if app.theme_cls.theme_style == "Dark" else (0.04, 0.43, 0.23, 1)
+                                line_color: 0, 0, 0, 0
+                                theme_text_color: "Custom"
+                                text_color: (0.7, 0.92, 0.76, 1) if app.theme_cls.theme_style == "Dark" else (0.04, 0.43, 0.23, 1)
+                                md_bg_color: (0.16, 0.29, 0.21, 1) if app.theme_cls.theme_style == "Dark" else (0.88, 0.96, 0.91, 1)
+                                bold: True
+                                size_hint_x: 1
+                                halign: "left"
+                                text_align: "left"
+                                radius: [10,]
+
+                            MDRectangleFlatIconButton:
+                                text: "Inventario general"
+                                icon: "cube-outline"
+                                icon_color: (0.9, 0.91, 0.92, 1) if app.theme_cls.theme_style == "Dark" else (0.15, 0.17, 0.18, 1)
+                                line_color: 0, 0, 0, 0
+                                theme_text_color: "Custom"
+                                text_color: (0.9, 0.91, 0.92, 1) if app.theme_cls.theme_style == "Dark" else (0.15, 0.17, 0.18, 1)
+                                size_hint_x: 1
+                                halign: "left"
+                                text_align: "left"
+                                on_release: root.ver_inventario()
+
+                            MDRectangleFlatIconButton:
+                                text: "Productos"
+                                icon: "package-variant-closed"
+                                icon_color: (0.9, 0.91, 0.92, 1) if app.theme_cls.theme_style == "Dark" else (0.15, 0.17, 0.18, 1)
+                                line_color: 0, 0, 0, 0
+                                theme_text_color: "Custom"
+                                text_color: (0.9, 0.91, 0.92, 1) if app.theme_cls.theme_style == "Dark" else (0.15, 0.17, 0.18, 1)
+                                size_hint_x: 1
+                                halign: "left"
+                                text_align: "left"
+                                on_release: root.ver_inventario()
+
+                            MDRectangleFlatIconButton:
+                                text: "Alertas"
+                                icon: "alert"
+                                icon_color: (0.9, 0.91, 0.92, 1) if app.theme_cls.theme_style == "Dark" else (0.15, 0.17, 0.18, 1)
+                                line_color: 0, 0, 0, 0
+                                theme_text_color: "Custom"
+                                text_color: (0.9, 0.91, 0.92, 1) if app.theme_cls.theme_style == "Dark" else (0.15, 0.17, 0.18, 1)
+                                size_hint_x: 1
+                                halign: "left"
+                                text_align: "left"
+                                on_release: root.ver_alertas()
+
+                            MDRectangleFlatIconButton:
+                                text: "Movimientos"
+                                icon: "swap-vertical"
+                                icon_color: (0.9, 0.91, 0.92, 1) if app.theme_cls.theme_style == "Dark" else (0.15, 0.17, 0.18, 1)
+                                line_color: 0, 0, 0, 0
+                                theme_text_color: "Custom"
+                                text_color: (0.9, 0.91, 0.92, 1) if app.theme_cls.theme_style == "Dark" else (0.15, 0.17, 0.18, 1)
+                                size_hint_x: 1
+                                halign: "left"
+                                text_align: "left"
+                                on_release: root.ver_movimientos()
+
+                            MDRectangleFlatIconButton:
+                                text: "Empleados"
+                                icon: "account-group"
+                                icon_color: (0.9, 0.91, 0.92, 1) if app.theme_cls.theme_style == "Dark" else (0.15, 0.17, 0.18, 1)
+                                line_color: 0, 0, 0, 0
+                                theme_text_color: "Custom"
+                                text_color: (0.9, 0.91, 0.92, 1) if app.theme_cls.theme_style == "Dark" else (0.15, 0.17, 0.18, 1)
+                                size_hint_x: 1
+                                halign: "left"
+                                text_align: "left"
+                                on_release: root.gestionar_empleados()
+
+                            MDRectangleFlatIconButton:
+                                text: "Proveedores"
+                                icon: "truck-delivery"
+                                icon_color: (0.9, 0.91, 0.92, 1) if app.theme_cls.theme_style == "Dark" else (0.15, 0.17, 0.18, 1)
+                                line_color: 0, 0, 0, 0
+                                theme_text_color: "Custom"
+                                text_color: (0.9, 0.91, 0.92, 1) if app.theme_cls.theme_style == "Dark" else (0.15, 0.17, 0.18, 1)
+                                size_hint_x: 1
+                                halign: "left"
+                                text_align: "left"
+                                on_release: root.gestionar_proveedores()
+
+                            MDRectangleFlatIconButton:
+                                text: "Categorías"
+                                icon: "shape-outline"
+                                icon_color: (0.9, 0.91, 0.92, 1) if app.theme_cls.theme_style == "Dark" else (0.15, 0.17, 0.18, 1)
+                                line_color: 0, 0, 0, 0
+                                theme_text_color: "Custom"
+                                text_color: (0.9, 0.91, 0.92, 1) if app.theme_cls.theme_style == "Dark" else (0.15, 0.17, 0.18, 1)
+                                size_hint_x: 1
+                                halign: "left"
+                                text_align: "left"
+                                on_release: root.ver_categorias()
+
+                            MDRectangleFlatIconButton:
+                                text: "Mi cuenta"
+                                icon: "account"
+                                icon_color: (0.9, 0.91, 0.92, 1) if app.theme_cls.theme_style == "Dark" else (0.15, 0.17, 0.18, 1)
+                                line_color: 0, 0, 0, 0
+                                theme_text_color: "Custom"
+                                text_color: (0.9, 0.91, 0.92, 1) if app.theme_cls.theme_style == "Dark" else (0.15, 0.17, 0.18, 1)
+                                size_hint_x: 1
+                                halign: "left"
+                                text_align: "left"
+                                on_release: root.mostrar_cuenta()
+
+                            MDRectangleFlatIconButton:
+                                text: "Reportes (PDF/Excel)"
+                                icon: "file-chart"
+                                icon_color: (0.9, 0.91, 0.92, 1) if app.theme_cls.theme_style == "Dark" else (0.15, 0.17, 0.18, 1)
+                                line_color: 0, 0, 0, 0
+                                theme_text_color: "Custom"
+                                text_color: (0.9, 0.91, 0.92, 1) if app.theme_cls.theme_style == "Dark" else (0.15, 0.17, 0.18, 1)
+                                size_hint_x: 1
+                                halign: "left"
+                                text_align: "left"
+                                on_release: root.ver_reportes()
+
+                            MDRectangleFlatIconButton:
+                                text: "Gráficos y Balances"
+                                icon: "chart-line"
+                                icon_color: (0.9, 0.91, 0.92, 1) if app.theme_cls.theme_style == "Dark" else (0.15, 0.17, 0.18, 1)
+                                line_color: 0, 0, 0, 0
+                                theme_text_color: "Custom"
+                                text_color: (0.9, 0.91, 0.92, 1) if app.theme_cls.theme_style == "Dark" else (0.15, 0.17, 0.18, 1)
+                                size_hint_x: 1
+                                halign: "left"
+                                text_align: "left"
+                                on_release: root.ver_graficos()
+
+                            MDRectangleFlatIconButton:
+                                text: "Configuración (Perfil y Tema)"
+                                icon: "cog"
+                                icon_color: (0.9, 0.91, 0.92, 1) if app.theme_cls.theme_style == "Dark" else (0.15, 0.17, 0.18, 1)
+                                line_color: 0, 0, 0, 0
+                                theme_text_color: "Custom"
+                                text_color: (0.9, 0.91, 0.92, 1) if app.theme_cls.theme_style == "Dark" else (0.15, 0.17, 0.18, 1)
+                                size_hint_x: 1
+                                halign: "left"
+                                text_align: "left"
+                                on_release: root.abrir_configuracion()
 
                     MDSeparator:
 
                     MDRectangleFlatIconButton:
-                        text: "  Dashboard"
-                        icon: "home"
-                        icon_color: 0.04, 0.43, 0.23, 1
-                        line_color: 0, 0, 0, 0
-                        theme_text_color: "Custom"
-                        text_color: 0.04, 0.43, 0.23, 1
-                        md_bg_color: 0.88, 0.96, 0.91, 1
-                        bold: True
-                        size_hint_x: 1
-                        radius: [10,]
-                    MDRectangleFlatIconButton:
-                        text: "  Inventario general"
-                        icon: "cube-outline"
-                        icon_color: 0.15, 0.17, 0.18, 1
-                        line_color: 0, 0, 0, 0
-                        theme_text_color: "Custom"
-                        text_color: 0.15, 0.17, 0.18, 1
-                        size_hint_x: 1
-                        on_release: root.ver_inventario()
-                    MDRectangleFlatIconButton:
-                        text: "  Productos"
-                        icon: "package-variant-closed"
-                        icon_color: 0.15, 0.17, 0.18, 1
-                        line_color: 0, 0, 0, 0
-                        theme_text_color: "Custom"
-                        text_color: 0.15, 0.17, 0.18, 1
-                        size_hint_x: 1
-                        on_release: root.ver_inventario()
-                    MDRectangleFlatIconButton:
-                        text: "  Alertas"
-                        icon: "alert"
-                        icon_color: 0.15, 0.17, 0.18, 1
-                        line_color: 0, 0, 0, 0
-                        theme_text_color: "Custom"
-                        text_color: 0.15, 0.17, 0.18, 1
-                        size_hint_x: 1
-                        on_release: root.ver_alertas()
-                    MDRectangleFlatIconButton:
-                        text: "  Movimientos"
-                        icon: "swap-vertical"
-                        icon_color: 0.15, 0.17, 0.18, 1
-                        line_color: 0, 0, 0, 0
-                        theme_text_color: "Custom"
-                        text_color: 0.15, 0.17, 0.18, 1
-                        size_hint_x: 1
-                        on_release: root.ver_movimientos()
-                    MDRectangleFlatIconButton:
-                        text: "  Empleados"
-                        icon: "account-group"
-                        icon_color: 0.15, 0.17, 0.18, 1
-                        line_color: 0, 0, 0, 0
-                        theme_text_color: "Custom"
-                        text_color: 0.15, 0.17, 0.18, 1
-                        size_hint_x: 1
-                        on_release: root.gestionar_empleados()
-                    MDRectangleFlatIconButton:
-                        text: "  Proveedores"
-                        icon: "truck-delivery"
-                        icon_color: 0.15, 0.17, 0.18, 1
-                        line_color: 0, 0, 0, 0
-                        theme_text_color: "Custom"
-                        text_color: 0.15, 0.17, 0.18, 1
-                        size_hint_x: 1
-                        on_release: root.gestionar_proveedores()
-                    MDRectangleFlatIconButton:
-                        text: "  Categorías"
-                        icon: "shape-outline"
-                        icon_color: 0.15, 0.17, 0.18, 1
-                        line_color: 0, 0, 0, 0
-                        theme_text_color: "Custom"
-                        text_color: 0.15, 0.17, 0.18, 1
-                        size_hint_x: 1
-                        on_release: root.ver_categorias()
-                    MDRectangleFlatIconButton:
-                        text: "  Mi cuenta"
-                        icon: "account"
-                        icon_color: 0.15, 0.17, 0.18, 1
-                        line_color: 0, 0, 0, 0
-                        theme_text_color: "Custom"
-                        text_color: 0.15, 0.17, 0.18, 1
-                        size_hint_x: 1
-                        on_release: root.mostrar_cuenta()
-                    MDRectangleFlatIconButton:
-                        text: "  Reportes"
-                        icon: "chart-bar"
-                        icon_color: 0.15, 0.17, 0.18, 1
-                        line_color: 0, 0, 0, 0
-                        theme_text_color: "Custom"
-                        text_color: 0.15, 0.17, 0.18, 1
-                        size_hint_x: 1
-                        on_release: root.ver_reportes()
-                    MDRectangleFlatIconButton:
-                        text: "  Gráficos y Estadísticas"
-                        icon: "chart-line"
-                        icon_color: 0.15, 0.17, 0.18, 1
-                        line_color: 0, 0, 0, 0
-                        theme_text_color: "Custom"
-                        text_color: 0.15, 0.17, 0.18, 1
-                        size_hint_x: 1
-                        on_release: root.ver_reportes()
-                    MDRectangleFlatIconButton:
-                        text: "  Configuración"
-                        icon: "cog"
-                        icon_color: 0.15, 0.17, 0.18, 1
-                        line_color: 0, 0, 0, 0
-                        theme_text_color: "Custom"
-                        text_color: 0.15, 0.17, 0.18, 1
-                        size_hint_x: 1
-                        on_release: root.mostrar_cuenta()
-
-                    Widget:
-                    MDSeparator:
-                    MDRectangleFlatIconButton:
-                        text: "  Cerrar sesión"
+                        text: "Cerrar sesión"
                         icon: "logout"
                         icon_color: 0.9, 0.15, 0.12, 1
                         line_color: 0, 0, 0, 0
                         theme_text_color: "Custom"
                         text_color: 0.9, 0.15, 0.12, 1
                         size_hint_x: 1
+                        halign: "left"
+                        text_align: "left"
                         on_release: root.cerrar_sesion()
 
+        # =========================================================
+        # CONTENIDO PRINCIPAL: DASHBOARD DEL GERENTE
+        # =========================================================
         MDBoxLayout:
             orientation: "vertical"
-            MDTopAppBar:
-                title: "Panel del Gerente"
-                elevation: 0
-                left_action_items: [["menu", lambda x: root.toggle_nav_drawer()]]
-                right_action_items: [["bell-badge-outline", lambda x: root.ver_alertas()], ["account-circle-outline", lambda x: root.mostrar_cuenta()]]
+
+            MDBoxLayout:
+                orientation: "horizontal"
+                size_hint_y: None
+                height: dp(56)
+                padding: [dp(8), 0, dp(12), 0]
+                spacing: dp(8)
                 md_bg_color: 0.02, 0.43, 0.23, 1
-                specific_text_color: 1, 1, 1, 1
+
+                MDIconButton:
+                    icon: "menu"
+                    theme_text_color: "Custom"
+                    text_color: 1, 1, 1, 1
+                    on_release: root.toggle_nav_drawer()
+
+                MDLabel:
+                    text: "Panel del Gerente"
+                    font_style: "H6"
+                    bold: True
+                    theme_text_color: "Custom"
+                    text_color: 1, 1, 1, 1
+
+                Widget:
+                    size_hint_x: 1
+
+                MDFloatLayout:
+                    size_hint: None, None
+                    size: dp(42), dp(42)
+                    pos_hint: {"center_y": 0.5}
+
+                    MDIconButton:
+                        icon: "bell-badge-outline"
+                        theme_text_color: "Custom"
+                        text_color: 1, 1, 1, 1
+                        on_release: root.ver_alertas()
+                        pos_hint: {"center_x": 0.5, "center_y": 0.5}
+
+                    MDCard:
+                        size_hint: None, None
+                        size: dp(20), dp(20)
+                        pos_hint: {"right": 0.98, "top": 0.98}
+                        radius: [dp(10), dp(10), dp(10), dp(10)]
+                        elevation: 0
+                        md_bg_color: 0.95, 0.12, 0.12, 1
+                        padding: 0
+
+                        MDLabel:
+                            text: str(root.notificaciones_vencidos)
+                            halign: "center"
+                            valign: "middle"
+                            font_size: "10sp"
+                            bold: True
+                            theme_text_color: "Custom"
+                            text_color: 1, 1, 1, 1
+
+                MDCard:
+                    size_hint: None, None
+                    size: dp(38), dp(38)
+                    radius: [19,]
+                    elevation: 0
+                    ripple_behavior: True
+                    md_bg_color: 1, 1, 1, 0.18
+                    on_release: root.mostrar_cuenta()
+                    pos_hint: {"center_y": 0.5}
+
+                    MDFloatLayout:
+                        MDIcon:
+                            icon: "account-circle"
+                            font_size: "30sp"
+                            theme_text_color: "Custom"
+                            text_color: 1, 1, 1, 1
+                            opacity: 0 if root.avatar_path else 1
+                            size_hint: None, None
+                            size: dp(30), dp(30)
+                            pos_hint: {"center_x": 0.5, "center_y": 0.5}
+
+                        FitImage:
+                            source: root.avatar_path
+                            opacity: 1 if root.avatar_path else 0
+                            allow_stretch: True
+                            keep_ratio: True
+                            size_hint: 0.88, 0.88
+                            radius: [dp(17)]
+                            pos_hint: {"center_x": 0.5, "center_y": 0.5}
 
             ScrollView:
                 do_scroll_x: False
+
                 MDBoxLayout:
                     orientation: "vertical"
-                    padding: dp(18)
-                    spacing: dp(14)
+                    padding: [dp(12), dp(8), dp(12), dp(10)]
+                    spacing: dp(10)
                     size_hint_y: None
                     height: self.minimum_height
 
+                    # BIENVENIDA
                     MDCard:
                         size_hint_y: None
-                        height: dp(84)
-                        padding: dp(16)
-                        radius: [10,]
+                        height: dp(74)
+                        padding: [dp(14), dp(8), dp(14), dp(8)]
+                        radius: [12,]
                         elevation: 1
-                        MDBoxLayout:
-                            orientation: "vertical"
-                            MDLabel:
-                                text: "¡Bienvenido, " + root.nombre_gerente + "!"
-                                font_style: "H6"
-                                bold: True
-                            MDLabel:
-                                text: "Aquí tienes el resumen general de tu inventario y operaciones."
-                                font_style: "Caption"
-                                theme_text_color: "Hint"
-                        MDBoxLayout:
-                            orientation: "vertical"
-                            size_hint_x: 0.34
-                            MDLabel:
-                                text: "Fecha: " + root.fecha_actual
-                                font_style: "Caption"
-                                halign: "right"
-                            MDLabel:
-                                text: "Hora: " + root.hora_actual
-                                font_style: "Caption"
-                                halign: "right"
+                        md_bg_color: (0.98, 0.99, 0.99, 1) if app.theme_cls.theme_style == "Light" else (0.18, 0.19, 0.20, 1)
 
+                        MDBoxLayout:
+                            orientation: "horizontal"
+                            spacing: dp(12)
+
+                            MDBoxLayout:
+                                orientation: "vertical"
+                                size_hint_x: 0.7
+
+                                MDLabel:
+                                    text: "¡Bienvenido, " + root.nombre_gerente + "!"
+                                    font_style: "H6"
+                                    bold: True
+                                    theme_text_color: "Custom"
+                                    text_color: (0.04, 0.4, 0.2, 1) if app.theme_cls.theme_style == "Light" else (0.7, 0.92, 0.76, 1)
+
+                                MDLabel:
+                                    text: "Aquí tienes el resumen general de tu inventario y operaciones."
+                                    font_style: "Caption"
+                                    theme_text_color: "Hint"
+
+                            MDBoxLayout:
+                                orientation: "vertical"
+                                size_hint_x: 0.3
+                                spacing: dp(2)
+
+                                MDLabel:
+                                    text: root.fecha_actual
+                                    font_style: "Caption"
+                                    halign: "right"
+                                    theme_text_color: "Hint"
+
+                                MDLabel:
+                                    text: root.hora_actual
+                                    font_style: "Caption"
+                                    halign: "right"
+                                    theme_text_color: "Hint"
+
+                    # MÉTRICAS GENERALES
                     MDGridLayout:
                         cols: 4
-                        spacing: dp(12)
+                        spacing: dp(10)
+                        size_hint_x: 1
                         size_hint_y: None
-                        height: dp(116)
-                        MDCard:
-                            padding: dp(12)
-                            radius: [10,]
-                            md_bg_color: 0.96, 0.99, 0.96, 1
-                            MDLabel:
-                                text: "Total Productos"
-                                font_style: "Caption"
-                                bold: True
-                                theme_text_color: "Custom"
-                                text_color: 0.05, 0.4, 0.2, 1
-                            MDBoxLayout:
-                                spacing: dp(14)
-                                MDIcon:
-                                    icon: "package-variant-closed"
-                                    font_size: "34sp"
-                                    theme_text_color: "Custom"
-                                    text_color: 0.3, 0.7, 0.2, 1
-                                MDLabel:
-                                    text: str(root.total_productos)
-                                    font_style: "H4"
-                                    bold: True
-                                    halign: "center"
-                            MDLabel:
-                                text: "+0 este mes"
-                                font_style: "Caption"
-                                theme_text_color: "Hint"
-                        MDCard:
-                            padding: dp(12)
-                            radius: [10,]
-                            md_bg_color: 1, 0.98, 0.93, 1
-                            MDLabel:
-                                text: "Stock Bajo"
-                                font_style: "Caption"
-                                bold: True
-                                theme_text_color: "Custom"
-                                text_color: 0.75, 0.4, 0.05, 1
-                            MDBoxLayout:
-                                spacing: dp(14)
-                                MDIcon:
-                                    icon: "alert-decagram"
-                                    font_size: "34sp"
-                                    theme_text_color: "Custom"
-                                    text_color: 1, 0.6, 0.05, 1
-                                MDLabel:
-                                    text: str(root.stock_bajo)
-                                    font_style: "H4"
-                                    bold: True
-                                    halign: "center"
-                            MDLabel:
-                                text: "Requieren atención"
-                                font_style: "Caption"
-                                theme_text_color: "Hint"
-                        MDCard:
-                            padding: dp(12)
-                            radius: [10,]
-                            md_bg_color: 0.95, 0.98, 1, 1
-                            MDLabel:
-                                text: "Por Vencer"
-                                font_style: "Caption"
-                                bold: True
-                                theme_text_color: "Custom"
-                                text_color: 0.1, 0.35, 0.65, 1
-                            MDBoxLayout:
-                                spacing: dp(14)
-                                MDIcon:
-                                    icon: "calendar-clock"
-                                    font_size: "34sp"
-                                    theme_text_color: "Custom"
-                                    text_color: 0.1, 0.5, 0.85, 1
-                                MDLabel:
-                                    text: str(root.por_vencer)
-                                    font_style: "H4"
-                                    bold: True
-                                    halign: "center"
-                            MDLabel:
-                                text: "Próximos 7 días"
-                                font_style: "Caption"
-                                theme_text_color: "Hint"
-                        MDCard:
-                            padding: dp(12)
-                            radius: [10,]
-                            md_bg_color: 1, 0.95, 0.95, 1
-                            MDLabel:
-                                text: "Vencidos"
-                                font_style: "Caption"
-                                bold: True
-                                theme_text_color: "Custom"
-                                text_color: 0.75, 0.08, 0.08, 1
-                            MDBoxLayout:
-                                spacing: dp(14)
-                                MDIcon:
-                                    icon: "close-circle"
-                                    font_size: "34sp"
-                                    theme_text_color: "Custom"
-                                    text_color: 0.9, 0.15, 0.12, 1
-                                MDLabel:
-                                    text: str(root.vencidos)
-                                    font_style: "H4"
-                                    bold: True
-                                    halign: "center"
-                            MDLabel:
-                                text: "Requieren acción"
-                                font_style: "Caption"
-                                theme_text_color: "Hint"
+                        height: dp(110)
+                        col_default_width: dp(200)
+                        row_default_height: dp(90)
 
+                        MDCard:
+                            padding: [dp(12), dp(10), dp(12), dp(10)]
+                            radius: [12,]
+                            md_bg_color: (0.13, 0.23, 0.16, 1) if app.theme_cls.theme_style == "Dark" else (0.89, 0.97, 0.89, 1)
+                            MDBoxLayout:
+                                orientation: "vertical"
+                                spacing: dp(4)
+                                MDLabel:
+                                    text: "Total Productos"
+                                    font_style: "Caption"
+                                    bold: True
+                                    theme_text_color: "Custom"
+                                    text_color: (0.7, 0.92, 0.76, 1) if app.theme_cls.theme_style == "Dark" else (0.05, 0.4, 0.2, 1)
+                                MDBoxLayout:
+                                    spacing: dp(6)
+                                    MDIcon:
+                                        icon: "package-variant-closed"
+                                        font_size: "30sp"
+                                        theme_text_color: "Custom"
+                                        text_color: (0.55, 0.88, 0.5, 1) if app.theme_cls.theme_style == "Dark" else (0.3, 0.7, 0.2, 1)
+                                        size_hint_x: None
+                                        width: dp(32)
+                                    MDLabel:
+                                        text: str(root.total_productos)
+                                        font_style: "H5"
+                                        bold: True
+                                        theme_text_color: "Custom"
+                                        text_color: (0.9, 0.96, 0.91, 1) if app.theme_cls.theme_style == "Dark" else (0.05, 0.35, 0.12, 1)
+                                MDLabel:
+                                    text: "+0 este mes"
+                                    font_style: "Caption"
+                                    theme_text_color: "Hint"
+
+                        MDCard:
+                            padding: [dp(12), dp(10), dp(12), dp(10)]
+                            radius: [12,]
+                            md_bg_color: (0.25, 0.2, 0.11, 1) if app.theme_cls.theme_style == "Dark" else (1, 0.93, 0.79, 1)
+                            MDBoxLayout:
+                                orientation: "vertical"
+                                spacing: dp(4)
+                                MDLabel:
+                                    text: "Stock Bajo"
+                                    font_style: "Caption"
+                                    bold: True
+                                    theme_text_color: "Custom"
+                                    text_color: (1, 0.75, 0.42, 1) if app.theme_cls.theme_style == "Dark" else (0.75, 0.4, 0.05, 1)
+                                MDBoxLayout:
+                                    spacing: dp(6)
+                                    MDIcon:
+                                        icon: "alert-decagram"
+                                        font_size: "30sp"
+                                        theme_text_color: "Custom"
+                                        text_color: (1, 0.72, 0.3, 1) if app.theme_cls.theme_style == "Dark" else (1, 0.6, 0.05, 1)
+                                        size_hint_x: None
+                                        width: dp(32)
+                                    MDLabel:
+                                        text: str(root.stock_bajo)
+                                        font_style: "H5"
+                                        bold: True
+                                        theme_text_color: "Custom"
+                                        text_color: (1, 0.88, 0.65, 1) if app.theme_cls.theme_style == "Dark" else (0.65, 0.3, 0.02, 1)
+                                MDLabel:
+                                    text: "Requieren atención"
+                                    font_style: "Caption"
+                                    theme_text_color: "Hint"
+
+                        MDCard:
+                            padding: [dp(12), dp(10), dp(12), dp(10)]
+                            radius: [12,]
+                            md_bg_color: (0.12, 0.19, 0.28, 1) if app.theme_cls.theme_style == "Dark" else (0.87, 0.94, 1, 1)
+                            MDBoxLayout:
+                                orientation: "vertical"
+                                spacing: dp(4)
+                                MDLabel:
+                                    text: "Por Vencer"
+                                    font_style: "Caption"
+                                    bold: True
+                                    theme_text_color: "Custom"
+                                    text_color: (0.65, 0.8, 1, 1) if app.theme_cls.theme_style == "Dark" else (0.1, 0.35, 0.65, 1)
+                                MDBoxLayout:
+                                    spacing: dp(6)
+                                    MDIcon:
+                                        icon: "calendar-clock"
+                                        font_size: "30sp"
+                                        theme_text_color: "Custom"
+                                        text_color: (0.5, 0.75, 1, 1) if app.theme_cls.theme_style == "Dark" else (0.1, 0.5, 0.85, 1)
+                                        size_hint_x: None
+                                        width: dp(32)
+                                    MDLabel:
+                                        text: str(root.por_vencer)
+                                        font_style: "H5"
+                                        bold: True
+                                        theme_text_color: "Custom"
+                                        text_color: (0.83, 0.9, 1, 1) if app.theme_cls.theme_style == "Dark" else (0.05, 0.3, 0.62, 1)
+                                MDLabel:
+                                    text: "Próximos 7 días"
+                                    font_style: "Caption"
+                                    theme_text_color: "Hint"
+
+                        MDCard:
+                            padding: [dp(12), dp(10), dp(12), dp(10)]
+                            radius: [12,]
+                            md_bg_color: (0.27, 0.14, 0.15, 1) if app.theme_cls.theme_style == "Dark" else (1, 0.87, 0.87, 1)
+                            MDBoxLayout:
+                                orientation: "vertical"
+                                spacing: dp(4)
+                                MDLabel:
+                                    text: "Vencidos"
+                                    font_style: "Caption"
+                                    bold: True
+                                    theme_text_color: "Custom"
+                                    text_color: (1, 0.62, 0.62, 1) if app.theme_cls.theme_style == "Dark" else (0.75, 0.08, 0.08, 1)
+                                MDBoxLayout:
+                                    spacing: dp(6)
+                                    MDIcon:
+                                        icon: "close-circle"
+                                        font_size: "30sp"
+                                        theme_text_color: "Custom"
+                                        text_color: (1, 0.52, 0.5, 1) if app.theme_cls.theme_style == "Dark" else (0.9, 0.15, 0.12, 1)
+                                        size_hint_x: None
+                                        width: dp(32)
+                                    MDLabel:
+                                        text: str(root.vencidos)
+                                        font_style: "H5"
+                                        bold: True
+                                        theme_text_color: "Custom"
+                                        text_color: (1, 0.82, 0.82, 1) if app.theme_cls.theme_style == "Dark" else (0.65, 0.05, 0.05, 1)
+                                MDLabel:
+                                    text: "Requieren acción"
+                                    font_style: "Caption"
+                                    theme_text_color: "Hint"
+
+                    # TARJETA DESTACADA: REPORTES, GRÁFICOS Y PROVEEDORES
+                    MDCard:
+                        padding: [dp(16), dp(12), dp(16), dp(12)]
+                        radius: [12,]
+                        size_hint_y: None
+                        height: dp(170)
+                        elevation: 1
+                        md_bg_color: (0.12, 0.13, 0.14, 1) if app.theme_cls.theme_style == "Dark" else (1, 1, 1, 1)
+
+                        MDBoxLayout:
+                            orientation: "vertical"
+                            spacing: dp(8)
+
+                            MDBoxLayout:
+                                size_hint_y: None
+                                height: dp(26)
+                                spacing: dp(8)
+
+                                MDIcon:
+                                    icon: "file-chart"
+                                    theme_text_color: "Custom"
+                                    text_color: (0.7, 0.92, 0.76, 1) if app.theme_cls.theme_style == "Dark" else (0.05, 0.4, 0.2, 1)
+                                    font_size: "20sp"
+                                    size_hint_x: None
+                                    width: dp(24)
+                                    halign: "center"
+
+                                MDLabel:
+                                    text: "Reportes, Gráficos y Proveedores"
+                                    bold: True
+                                    font_style: "Subtitle1"
+                                    size_hint_x: 1
+                                    theme_text_color: "Custom"
+                                    text_color: (0.7, 0.92, 0.76, 1) if app.theme_cls.theme_style == "Dark" else (0.05, 0.4, 0.2, 1)
+
+                            MDLabel:
+                                text: "Generación de archivos limpios, balances de bajas/vencidos y control completo de entregas por cada proveedor."
+                                font_style: "Caption"
+                                theme_text_color: "Hint"
+                                size_hint_y: None
+                                height: dp(22)
+
+                            MDGridLayout:
+                                cols: 4
+                                spacing: dp(8)
+                                size_hint_x: 1
+                                size_hint_y: None
+                                height: dp(48)
+                                col_default_width: dp(170)
+
+                                MDRaisedButton:
+                                    text: "Crear PDF"
+                                    md_bg_color: 0.05, 0.4, 0.2, 1
+                                    text_color: 1, 1, 1, 1
+                                    radius: [dp(8),]
+                                    on_release: root.crear_reporte_pdf()
+
+                                MDRaisedButton:
+                                    text: "Crear Excel"
+                                    md_bg_color: 0.1, 0.5, 0.3, 1
+                                    text_color: 1, 1, 1, 1
+                                    radius: [dp(8),]
+                                    on_release: root.crear_reporte_excel()
+
+                                MDRaisedButton:
+                                    text: "Proveedores"
+                                    md_bg_color: 0.15, 0.5, 0.7, 1
+                                    text_color: 1, 1, 1, 1
+                                    radius: [dp(8),]
+                                    on_release: root.gestionar_proveedores()
+
+                                MDRaisedButton:
+                                    text: "Gráficos"
+                                    md_bg_color: 0.45, 0.25, 0.65, 1
+                                    text_color: 1, 1, 1, 1
+                                    radius: [dp(8),]
+                                    on_release: root.ver_graficos()
+
+                    # ALERTAS
                     MDGridLayout:
                         cols: 2
-                        spacing: dp(14)
+                        spacing: dp(12)
+                        size_hint_x: 1
                         size_hint_y: None
-                        height: dp(190)
+                        height: dp(188)
+
                         MDCard:
-                            padding: dp(14)
+                            padding: [dp(14), dp(12), dp(14), dp(12)]
                             radius: [10,]
                             MDBoxLayout:
                                 orientation: "vertical"
+                                spacing: dp(6)
                                 MDBoxLayout:
                                     size_hint_y: None
                                     height: dp(28)
@@ -397,23 +701,25 @@
                                     MDFlatButton:
                                         text: "Ver todos"
                                         theme_text_color: "Custom"
-                                        text_color: 0.05, 0.4, 0.2, 1
+                                        text_color: (0.7, 0.92, 0.76, 1) if app.theme_cls.theme_style == "Dark" else (0.05, 0.4, 0.2, 1)
                                         on_release: root.ver_inventario()
                                 MDLabel:
-                                    text: root.resumen_alertas
+                                    text: root.resumen_vencimiento
                                     font_style: "Caption"
-                                    text_size: self.width, None
                                     valign: "top"
                                 MDRaisedButton:
-                                    text: "Ver productos por vencer"
+                                    text: "Gestionar productos vencidos"
                                     md_bg_color: 0.05, 0.4, 0.2, 1
+                                    text_color: 1, 1, 1, 1
                                     pos_hint: {"center_x": .5}
-                                    on_release: root.ver_inventario()
+                                    on_release: root.gestionar_productos_vencidos()
+
                         MDCard:
-                            padding: dp(14)
+                            padding: [dp(14), dp(12), dp(14), dp(12)]
                             radius: [10,]
                             MDBoxLayout:
                                 orientation: "vertical"
+                                spacing: dp(6)
                                 MDBoxLayout:
                                     size_hint_y: None
                                     height: dp(28)
@@ -423,24 +729,25 @@
                                     MDFlatButton:
                                         text: "Ver todas"
                                         theme_text_color: "Custom"
-                                        text_color: 0.05, 0.4, 0.2, 1
+                                        text_color: (0.7, 0.92, 0.76, 1) if app.theme_cls.theme_style == "Dark" else (0.05, 0.4, 0.2, 1)
                                         on_release: root.ver_alertas()
                                 MDLabel:
                                     text: root.resumen_alertas
                                     font_style: "Caption"
-                                    text_size: self.width, None
                                     valign: "top"
                                 MDRaisedButton:
                                     text: "Ir a alertas"
                                     md_bg_color: 0.05, 0.4, 0.2, 1
+                                    text_color: 1, 1, 1, 1
                                     pos_hint: {"center_x": .5}
                                     on_release: root.ver_alertas()
 
+                    # MOVIMIENTOS RECIENTES
                     MDCard:
-                        padding: dp(14)
+                        padding: [dp(14), dp(12), dp(14), dp(12)]
                         radius: [10,]
                         size_hint_y: None
-                        height: dp(185)
+                        height: dp(160)
                         MDBoxLayout:
                             orientation: "vertical"
                             MDBoxLayout:
@@ -452,73 +759,60 @@
                                 MDFlatButton:
                                     text: "Ver todos los movimientos"
                                     theme_text_color: "Custom"
-                                    text_color: 0.05, 0.4, 0.2, 1
+                                    text_color: (0.7, 0.92, 0.76, 1) if app.theme_cls.theme_style == "Dark" else (0.05, 0.4, 0.2, 1)
                                     on_release: root.ver_movimientos()
                             MDLabel:
                                 text: root.resumen_movimientos
                                 font_style: "Caption"
-                                text_size: self.width, None
                                 valign: "top"
 
-                    MDGridLayout:
-                        cols: 2
-                        spacing: dp(14)
+                    # ACCIONES RÁPIDAS
+                    MDCard:
+                        padding: [dp(14), dp(12), dp(14), dp(12)]
+                        radius: [10,]
                         size_hint_y: None
-                        height: dp(190)
-                        MDCard:
-                            padding: dp(14)
-                            radius: [10,]
-                            MDBoxLayout:
-                                orientation: "vertical"
-                                MDLabel:
-                                    text: "Acciones rápidas"
-                                    bold: True
-                                    size_hint_y: None
-                                    height: dp(28)
-                                MDGridLayout:
-                                    cols: 2
-                                    spacing: dp(8)
-                                    MDRectangleFlatIconButton:
-                                        text: "Ver inventario"
-                                        icon: "package-variant-closed"
-                                        on_release: root.ver_inventario()
-                                    MDRectangleFlatIconButton:
-                                        text: "Agregar producto"
-                                        icon: "plus-box"
-                                        on_release: root.agregar_producto()
-                                    MDRectangleFlatIconButton:
-                                        text: "Gestionar empleados"
-                                        icon: "account-group"
-                                        on_release: root.gestionar_empleados()
-                                    MDRectangleFlatIconButton:
-                                        text: "Ver reportes"
-                                        icon: "chart-bar"
-                                        on_release: root.ver_reportes()
-                                    MDRectangleFlatIconButton:
-                                        text: "Proveedores"
-                                        icon: "truck-delivery"
-                                        on_release: root.gestionar_proveedores()
-                                    MDRectangleFlatIconButton:
-                                        text: "Escanear código"
-                                        icon: "barcode-scan"
-                                        on_release: root.escanear_codigo()
-                        MDCard:
-                            padding: dp(14)
-                            radius: [10,]
-                            MDBoxLayout:
-                                orientation: "vertical"
-                                MDLabel:
-                                    text: "Resumen del inventario"
-                                    bold: True
-                                    size_hint_y: None
-                                    height: dp(28)
-                                MDLabel:
-                                    text: root.resumen_categorias
-                                    font_style: "Body2"
-                                    text_size: self.width, None
-                                    valign: "top"
-                                MDRaisedButton:
-                                    text: "Ver análisis completo"
-                                    md_bg_color: 0.05, 0.4, 0.2, 1
-                                    pos_hint: {"center_x": .5}
-                                    on_release: root.ver_categorias()
+                        height: dp(150)
+                        MDBoxLayout:
+                            orientation: "vertical"
+                            MDLabel:
+                                text: "Acciones rápidas"
+                                bold: True
+                                size_hint_y: None
+                                height: dp(26)
+                            MDGridLayout:
+                                cols: 3
+                                spacing: dp(8)
+                                size_hint_x: 1
+                                size_hint_y: None
+                                height: dp(100)
+                                col_default_width: dp(180)
+                                MDRectangleFlatIconButton:
+                                    text: "Inventario"
+                                    icon: "package-variant-closed"
+                                    size_hint_x: 1
+                                    on_release: root.ver_inventario()
+                                MDRectangleFlatIconButton:
+                                    text: "Agregar"
+                                    icon: "plus-box"
+                                    size_hint_x: 1
+                                    on_release: root.agregar_producto()
+                                MDRectangleFlatIconButton:
+                                    text: "Empleados"
+                                    icon: "account-group"
+                                    size_hint_x: 1
+                                    on_release: root.gestionar_empleados()
+                                MDRectangleFlatIconButton:
+                                    text: "Reportes"
+                                    icon: "chart-bar"
+                                    size_hint_x: 1
+                                    on_release: root.ver_reportes()
+                                MDRectangleFlatIconButton:
+                                    text: "Proveedores"
+                                    icon: "truck-delivery"
+                                    size_hint_x: 1
+                                    on_release: root.gestionar_proveedores()
+                                MDRectangleFlatIconButton:
+                                    text: "Configuración"
+                                    icon: "cog"
+                                    size_hint_x: 1
+                                    on_release: root.abrir_configuracion()

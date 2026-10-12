@@ -1,4 +1,7 @@
+# Controlador del escáner y búsqueda de productos.
+# Sirve para consultar códigos de barras, cargar datos públicos y registrar movimientos de stock.
 from datetime import date
+import requests
 from base_de_datos.gestor_bd import GestorBD
 
 
@@ -19,6 +22,29 @@ class ControladorEscaner:
         """
         res = self.bd.ejecutar_consulta(sql, (codigo_barras,))
         return res[0] if res else None
+
+    def buscar_datos_publicos(self, codigo_barras):
+        """Consulta nombre y categoría pública para completar un alta escaneada."""
+        try:
+            respuesta = requests.get(
+                f"https://world.openfoodfacts.org/api/v2/product/{codigo_barras}.json",
+                params={"fields": "product_name,product_name_es,categories_tags"},
+                timeout=5,
+            )
+            respuesta.raise_for_status()
+            producto = respuesta.json().get("product", {})
+            nombre = (producto.get("product_name_es") or producto.get("product_name") or "").strip()
+            if not nombre:
+                return None
+            categoria = "Otros"
+            for etiqueta in producto.get("categories_tags", []):
+                etiqueta = etiqueta.rsplit(":", 1)[-1].replace("-", " ").strip()
+                if etiqueta:
+                    categoria = etiqueta[:1].upper() + etiqueta[1:]
+                    break
+            return {"codigo": codigo_barras, "nombre": nombre, "categoria": categoria}
+        except (requests.RequestException, ValueError, TypeError):
+            return None
 
     def registrar_movimiento(self, id_producto, tipo_movimiento, cantidad, id_empleado):
         """Registra una entrada o salida de stock y actualiza la cantidad del producto."""

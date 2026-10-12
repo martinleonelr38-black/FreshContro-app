@@ -1,0 +1,143 @@
+Guia de codigo de FreshControl
+=============================
+
+Proyecto: FreshControl 0.1.1
+Objetivo general: sistema para gestionar inventario, vencimientos, usuarios, escaneo de productos y exportacion de reportes.
+
+1. CONFIGURACION Y DOCUMENTACION
+--------------------------------
+
+- README.md
+  Sirve como guia de instalacion, compilacion y uso del proyecto.
+  Explica como preparar el entorno en Ubuntu/WSL2 para compilar Android y describe reglas del sistema.
+
+- freshcontrol_app/buildozer.spec
+  Sirve para definir la configuracion de compilacion del APK.
+  Aqui se declaran el nombre de la app, dependencias, permisos, arquitectura Android y paquetes requeridos.
+
+- freshcontrol_app/requerimientos.txt
+  Sirve para listar las librerias necesarias para ejecutar la app.
+  Contiene Kivy, KivyMD, Requests, OpenPyXL, ReportLab y dependencias opcionales para autenticacion y escaneo.
+
+2. APLICACION PRINCIPAL
+----------------------
+
+- freshcontrol_app/main.py
+  Sirve como punto de entrada de la aplicacion.
+  Aqui se inicia Kivy, se cargan todas las vistas .kv, se configuran elementos visuales, pantallas y la logica principal del sistema.
+  Tambien enlaza los controladores de escaner, inventario, reportes y OCR.
+
+3. BASE DE DATOS
+----------------
+
+- freshcontrol_app/base_de_datos/__init__.py
+  Sirve para exportar funciones de acceso a la base de datos.
+  Permite importar inicializar_bd, registrar_usuario y verificar_credenciales desde un punto central.
+
+- freshcontrol_app/base_de_datos/modelos.py
+  Sirve como modelo de inicializacion de tablas.
+  Define la estructura inicial de proveedores, empleados, productos, movimientos y alertas.
+
+- freshcontrol_app/base_de_datos/gestor_bd.py
+  Sirve como motor principal de la base de datos.
+  Aqui se crean conexiones SQLite, se ejecutan comandos SQL, se registran movimientos, se gestionan vencimientos y se realizan migraciones de campos.
+  Es el archivo central para persistencia y validacion del inventario.
+
+4. CONTROLADORES
+-----------------
+
+- freshcontrol_app/controladores/__init__.py
+  Sirve para centralizar imports de controladores.
+  Facilita la importacion de ControladorAuth, ControladorInventario, ControladorEscaner y ControladorReportes.
+
+- freshcontrol_app/controladores/controlador_auth.py
+  Sirve para autenticar usuarios.
+  Encapsula registro de empleados y gerentes y verificacion de credenciales.
+
+- freshcontrol_app/controladores/controlador_inventario.py
+  Sirve para manejar productos del inventario.
+  Aqui se registran productos, se calculan alarmas de vencimiento, se normalizan categorias y se gestionan reglas de stock.
+
+- freshcontrol_app/controladores/controlador_escaner.py
+  Sirve para trabajar con codigos de barras.
+  Consulta datos publicos desde Open Food Facts, busca productos existentes y registra movimientos de entrada/salida.
+
+- freshcontrol_app/controladores/controlador_reportes.py
+  Sirve para crear reportes del almacén.
+  Genera resúmenes, listas de vencimientos, historial de movimientos y exportacion a PDF/Excel.
+
+- freshcontrol_app/controladores/ocr_vencimiento.py
+  Sirve para detectar fechas de vencimiento desde imagenes.
+  Usa expresiones regulares y logica de OCR para extraer fechas de etiquetas/productos y sugerirlas al usuario.
+
+5. VISTAS (INTERFAZ)
+--------------------
+
+- freshcontrol_app/vistas/inicio_sesion.kv
+  Sirve para mostrar la pantalla de login.
+  Define la interfaz principal donde el usuario inicia sesion.
+
+- freshcontrol_app/vistas/registro_gerente.kv
+  Sirve para registrar la cuenta del gerente.
+  Tiene los campos de nombre, correo, usuario, contraseña y datos de acceso.
+
+- freshcontrol_app/vistas/registro_empleado.kv
+  Sirve para registrar empleados.
+  Define el formulario operativo del personal.
+
+- freshcontrol_app/vistas/panel_empleado.kv
+  Sirve para mostrar el panel principal del empleado.
+  Contiene botones y contenidos para tareas simples de inventario y control.
+
+- freshcontrol_app/vistas/panel_gerente.kv
+  Sirve para mostrar el panel de gerente.
+  Centraliza reportes, navegacion y funciones administrativas.
+
+- freshcontrol_app/vistas/escaner.kv
+  Sirve para la pantalla de escaneo.
+  Presenta la interfaz para leer productos, revisar datos y confirmar acciones de stock.
+
+6. PRUEBAS
+----------
+
+- tests/test_ocr_vencimiento.py
+  Sirve para validar la deteccion de fechas invalidas y la lectura correcta de vencimientos.
+
+- tests/test_gestor_bd.py
+  Sirve para comprobar migraciones, movimientos, reportes, retiro de stock vencido y validaciones del gestor central.
+
+7. FLUJO GENERAL DEL SISTEMA
+---------------------------
+
+1. El usuario inicia la app desde main.py.
+2. Se carga la vista de login.
+3. El usuario se registra o inicia sesion mediante controlador_auth.
+4. El sistema accede a la base de datos con gestor_bd.
+5. El empleado o gerente trabaja con inventario, escaneo y alertas.
+6. Los reportes y vencimientos se consultan desde controlador_reportes y controlador_inventario.
+7. Si hay una imagen de etiqueta, OCR detecta fechas de vencimiento para facilitar el registro.
+
+8. ARCHIVOS IMPORTANTES A RECORDAR
+---------------------------------
+
+- freshcontrol_app/main.py: inicio principal
+- freshcontrol_app/base_de_datos/gestor_bd.py: logica central de datos
+- freshcontrol_app/controladores/controlador_inventario.py: reglas del stock
+- freshcontrol_app/controladores/controlador_reportes.py: exportacion e informes
+- freshcontrol_app/controladores/ocr_vencimiento.py: lectura de fechas
+
+9. OBSERVACIONES DE DESARROLLO
+------------------------------
+
+- El sistema usa SQLite como base de datos local.
+- La app esta pensada para Kivy/KivyMD.
+- El escaneo de productos puede consultar fuentes publicas como Open Food Facts.
+- Los reportes pueden exportarse a PDF o Excel para analisis del almacen.
+- La carpeta reportes es el destino de archivos generados por la aplicacion.
+
+10. EXPLICACION BREVE DE CODIGO
+--------------------------------
+
+Los archivos .py llevan la logica del negocio y acceso a datos, mientras los .kv definen la interfaz grafica. El archivo main.py actua como orquestador. El gestor_bd.py es el centro de persistencia, y los controladores manejan tareas especificas: autenticacion, inventario, escaneo y reportes. Las vistas se conectan con la logica mediante ids y eventos definidos en Kivy.
+
+Fin de la guia.

@@ -1,10 +1,12 @@
+# Vista del escáner.
+# Sirve para leer códigos de barras y preparar la información antes de guardar el producto.
 <PantallaEscaner>:
     md_bg_color: 0.96, 0.97, 0.97, 1
 
     MDBoxLayout:
         orientation: "vertical"
-        padding: [dp(28), dp(24), dp(28), dp(24)]
-        spacing: dp(14)
+        padding: [dp(12), dp(12), dp(12), dp(12)]
+        spacing: dp(8)
 
         MDTopAppBar:
             title: "Escáner de producto"
@@ -19,13 +21,13 @@
 
         MDCard:
             orientation: "vertical"
-            padding: dp(24)
-            spacing: dp(14)
+            padding: dp(14)
+            spacing: dp(10)
             radius: [14,]
             elevation: 2
-            size_hint_x: .82
+            size_hint_x: .96
             size_hint_y: None
-            height: dp(440)
+            height: dp(535)
             pos_hint: {"center_x": .5}
 
             MDBoxLayout:
@@ -37,6 +39,9 @@
                     font_size: "32sp"
                     theme_text_color: "Custom"
                     text_color: 0.02, 0.43, 0.23, 1
+                    size_hint: None, None
+                    size: dp(34), dp(34)
+                    pos_hint: {"center_y": 0.62}
                 MDBoxLayout:
                     orientation: "vertical"
                     MDLabel:
@@ -118,7 +123,13 @@
                     theme_text_color: "Custom"
                     text_color: 0.2, 0.2, 0.2, 1
 
-            Widget:
+            MDRaisedButton:
+                text: "Escanear con cámara"
+                icon: "barcode-scan"
+                size_hint_y: None
+                height: dp(42)
+                md_bg_color: 0.08, 0.45, 0.25, 1
+                on_release: root.escanear_con_camara()
 
             MDRectangleFlatIconButton:
                 text: "Editar datos del producto"
@@ -129,6 +140,16 @@
                 size_hint_y: None
                 height: dp(42)
                 on_release: root.editar_producto()
+
+            MDRectangleFlatIconButton:
+                text: "Quitar fecha de vencimiento"
+                icon: "calendar-remove-outline"
+                line_color: 0.75, 0.25, 0.15, 1
+                icon_color: 0.75, 0.25, 0.15, 1
+                text_color: 0.65, 0.2, 0.12, 1
+                size_hint_y: None
+                height: dp(42)
+                on_release: root.quitar_fecha_vencimiento()
 
             MDBoxLayout:
                 spacing: dp(12)

@@ -1,5 +1,14 @@
+# Vista de registro del gerente.
+# Sirve para crear la cuenta del usuario administrador del sistema.
 <PantallaRegistroGerente>:
     md_bg_color: 0.95, 0.96, 0.96, 1
+
+    canvas.before:
+        Color:
+            rgba: 0.94, 0.97, 0.95, 1
+        Rectangle:
+            pos: self.pos
+            size: self.size
 
     ScrollView:
         do_scroll_x: False
@@ -41,8 +50,9 @@
                 orientation: 'vertical'
                 padding: dp(20)
                 spacing: dp(12)
-                radius: [15,]
+                radius: [18,]
                 elevation: 2
+                md_bg_color: 1, 1, 1, 1
                 size_hint_y: None
                 height: self.minimum_height
                 pos_hint: {"center_x": 0.5}
@@ -70,6 +80,9 @@
                     icon_left: "account-outline"
                     mode: "rectangle"
                     helper_text_mode: "on_error"
+                    fill_color: 0.97, 0.99, 0.97, 1
+                    text_color_focus: 0.08, 0.45, 0.25, 1
+                    hint_text_color_focus: 0.35, 0.52, 0.43, 1
 
                 MDTextField:
                     id: apellido_field
@@ -77,6 +90,9 @@
                     icon_left: "account-outline"
                     mode: "rectangle"
                     helper_text_mode: "on_error"
+                    fill_color: 0.97, 0.99, 0.97, 1
+                    text_color_focus: 0.08, 0.45, 0.25, 1
+                    hint_text_color_focus: 0.35, 0.52, 0.43, 1
 
                 MDTextField:
                     id: usuario_field
@@ -84,6 +100,9 @@
                     icon_left: "account-box-outline"
                     mode: "rectangle"
                     helper_text_mode: "on_error"
+                    fill_color: 0.97, 0.99, 0.97, 1
+                    text_color_focus: 0.08, 0.45, 0.25, 1
+                    hint_text_color_focus: 0.35, 0.52, 0.43, 1
 
                 RelativeLayout:
                     size_hint_y: None

@@ -1,3 +1,17 @@
+# Vista de inicio de sesión.
+# Sirve para mostrar el acceso principal de usuarios a la aplicación.
+<MDRaisedButton>:
+    radius: [dp(8),]
+
+<MDFlatButton>:
+    radius: [dp(8),]
+
+<MDRectangleFlatIconButton>:
+    radius: [dp(8),]
+
+<MDIconButton>:
+    radius: [dp(24),]
+
 <PantallaInicioSesion>:
     md_bg_color: 0.95, 0.96, 0.96, 1
 
@@ -108,10 +122,21 @@
                 text: "Iniciar Sesión"
                 icon: "lock-open-outline"
                 md_bg_color: 0.08, 0.45, 0.25, 1
+                radius: [dp(8),]
                 pos_hint: {"center_x": .5}
                 size_hint_x: 1
                 elevation: 1
                 on_release: root.iniciar_sesion()
+
+            MDRectangleFlatIconButton:
+                text: "Continuar con Google"
+                icon: "google"
+                line_color: 0.25, 0.35, 0.3, 1
+                icon_color: 0.25, 0.35, 0.3, 1
+                text_color: 0.15, 0.2, 0.18, 1
+                pos_hint: {"center_x": .5}
+                size_hint_x: 1
+                on_release: root.iniciar_sesion_google()
 
             MDRectangleFlatIconButton:
                 text: "Registrar como Gerente"
