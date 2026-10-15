@@ -340,16 +340,21 @@ class GestorBD:
             """SELECT p.nombre, p.categoria, p.cantidad_stock, m.cantidad,
                       m.fecha_hora, lower(m.tipo)
                FROM movimientos m JOIN productos p ON p.id_producto = m.id_producto
-               WHERE lower(m.tipo) IN ('salida', 'vencido')
+               WHERE lower(m.tipo) IN ('entrada', 'salida', 'vencido')
                ORDER BY m.id_movimiento DESC LIMIT 10"""
         )
         for nombre, categoria, stock, cantidad, fecha, tipo_movimiento in cursor.fetchall():
             if tipo_movimiento == "vencido":
+                tipo_aviso = "Stock reducido"
                 detalle = f"{nombre}: retiro de {cantidad} unidad(es) por vencimiento; quedan {stock} ({fecha})"
-            else:
+            elif tipo_movimiento == "salida":
+                tipo_aviso = "Stock reducido"
                 detalle = f"{nombre}: salida de {cantidad} unidad(es); quedan {stock} ({fecha})"
+            else:
+                tipo_aviso = "Movimiento de stock"
+                detalle = f"{nombre}: entrada de {cantidad} unidad(es); stock actual {stock} ({fecha})"
             notificaciones.append((
-                "Stock reducido",
+                tipo_aviso,
                 detalle,
                 categoria,
                 stock,
@@ -395,29 +400,32 @@ class GestorBD:
                 tipo = "Stock bajo"
                 avisos.append((id_producto, tipo, f"{nombre} tiene {stock} unidades disponibles"))
 
-            salidas_recientes = cursor.execute(
+            movimientos_recientes = cursor.execute(
                 """
                 SELECT m.id_movimiento, p.id_producto, p.nombre, m.cantidad, lower(m.tipo)
                 FROM movimientos m
                 JOIN productos p ON p.id_producto = m.id_producto
-                WHERE lower(m.tipo) IN ('salida', 'vencido')
+                WHERE lower(m.tipo) IN ('entrada', 'salida', 'vencido')
                     AND NOT EXISTS (
                         SELECT 1
                         FROM alertas a
                         WHERE a.id_producto = p.id_producto
-                            AND a.tipo_alerta = 'Stock reducido'
+                            AND a.tipo_alerta IN ('Movimiento de stock', 'Stock reducido')
                             AND a.mensaje LIKE ('%movimiento #' || m.id_movimiento)
                     )
                 ORDER BY m.id_movimiento DESC
                 """
             ).fetchall()
-            for id_movimiento, id_producto, nombre, cantidad, tipo_movimiento in salidas_recientes:
-                tipo = "Stock reducido"
-                detalle = (
-                    f"{nombre}: retiro de {cantidad} unidad(es) por vencimiento"
-                    if tipo_movimiento == "vencido"
-                    else f"{nombre}: salida de {cantidad} unidad(es)"
-                )
+            for id_movimiento, id_producto, nombre, cantidad, tipo_movimiento in movimientos_recientes:
+                if tipo_movimiento == "vencido":
+                    tipo = "Stock reducido"
+                    detalle = f"{nombre}: retiro de {cantidad} unidad(es) por vencimiento"
+                elif tipo_movimiento == "salida":
+                    tipo = "Stock reducido"
+                    detalle = f"{nombre}: salida de {cantidad} unidad(es)"
+                else:
+                    tipo = "Movimiento de stock"
+                    detalle = f"{nombre}: entrada de {cantidad} unidad(es)"
                 avisos.append((id_producto, tipo, f"{detalle} · movimiento #{id_movimiento}"))
 
             for id_producto, tipo, mensaje in avisos:
@@ -432,14 +440,16 @@ class GestorBD:
                         (id_producto, tipo, mensaje),
                     ).fetchone()
                 else:
+                    # Un mismo aviso persistente no debe volver a sumar al contador
+                    # todos los días. Si cambia el mensaje (por ejemplo, al vencer),
+                    # se genera una nueva alerta que sí puede quedar pendiente.
                     existe = cursor.execute(
                         """
                         SELECT 1 FROM alertas
                         WHERE id_producto = ? AND tipo_alerta = ? AND mensaje = ?
-                            AND fecha_generada = ?
                         LIMIT 1
                         """,
-                        (id_producto, tipo, mensaje, fecha_generada),
+                        (id_producto, tipo, mensaje),
                     ).fetchone()
                 if not existe:
                     cursor.execute(
