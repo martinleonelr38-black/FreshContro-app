@@ -348,6 +348,20 @@ class TestGestorBD(unittest.TestCase):
         )
         self.assertTrue(exito, mensaje)
 
+        # La alerta debe existir inmediatamente: no se necesita abrir el panel
+        # ni llamar manualmente a sincronizar_alertas() para que llegue al gerente.
+        alertas_inmediatas = self.gestor.listar_alertas(1000)
+        self.assertTrue(any(
+            alerta[3] == "Stock reducido" and "salida" in alerta[4].lower()
+            for alerta in alertas_inmediatas
+        ))
+        # Los movimientos de entrada también se comparten en la bandeja de alertas.
+        self.assertTrue(any(
+            alerta[3] == "Movimiento de stock"
+            and "entrada de 5 unidad(es)" in alerta[4]
+            for alerta in alertas_inmediatas
+        ))
+
         self.gestor.ejecutar_comando(
             """
             INSERT INTO productos
