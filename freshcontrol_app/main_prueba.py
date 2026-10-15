@@ -1477,6 +1477,8 @@ class PantallaPanelEmpleado(MDScreen):
     stock_bajo = NumericProperty(0)
     por_vencer = NumericProperty(0)
     vencidos = NumericProperty(0)
+    retirados_por_vencimiento = NumericProperty(0)
+    unidades_retiradas_vencimiento = NumericProperty(0)
     notificaciones_vencidos = NumericProperty(0)
     _evento_reloj = None
 
@@ -1831,6 +1833,8 @@ class PantallaPanelEmpleado(MDScreen):
             self.stock_bajo = metricas.get("stock_bajo", 0)
             self.por_vencer = metricas.get("por_vencer", 0)
             self.vencidos = metricas.get("vencidos", 0)
+            self.retirados_por_vencimiento = metricas.get("retirados_por_vencimiento", 0)
+            self.unidades_retiradas_vencimiento = metricas.get("unidades_retiradas_vencimiento", 0)
             gestor = GestorBD()
             gestor.sincronizar_alertas(30)
             alertas_pendientes = gestor.listar_alertas(1000)
@@ -2044,6 +2048,8 @@ class PantallaPanelGerente(MDScreen):
     stock_bajo = NumericProperty(0)
     por_vencer = NumericProperty(0)
     vencidos = NumericProperty(0)
+    retirados_por_vencimiento = NumericProperty(0)
+    unidades_retiradas_vencimiento = NumericProperty(0)
     notificaciones_vencidos = NumericProperty(0)
     resumen_vencimiento = StringProperty("No hay productos por vencer en los próximos 7 días.")
     resumen_alertas = StringProperty("No hay alertas críticas.")
@@ -2090,6 +2096,8 @@ class PantallaPanelGerente(MDScreen):
             self.stock_bajo = metricas.get("stock_bajo", 0)
             self.por_vencer = metricas.get("por_vencer", 0)
             self.vencidos = metricas.get("vencidos", 0)
+            self.retirados_por_vencimiento = metricas.get("retirados_por_vencimiento", 0)
+            self.unidades_retiradas_vencimiento = metricas.get("unidades_retiradas_vencimiento", 0)
             gestor = GestorBD()
             gestor.sincronizar_alertas(30)
             alertas_pendientes = gestor.listar_alertas(1000)
@@ -2255,7 +2263,7 @@ class PantallaPanelGerente(MDScreen):
                     size_hint_x=None,
                     width=dp(112),
                     on_release=lambda _button, alerta_id=id_alerta: (
-                        gestor.marcar_alerta_leida(alerta_id), dialog.dismiss(), self.ver_alertas()
+                        gestor.marcar_alerta_leida(alerta_id), self.actualizar_metricas(), self.actualizar_resumenes(), dialog.dismiss(), self.ver_alertas()
                     ),
                 ))
             contenido.add_widget(fila)
