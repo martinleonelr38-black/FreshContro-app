@@ -892,6 +892,17 @@ def obtener_metricas_dashboard():
     )
     vencidos = cursor.fetchone()[0]
 
+    # Cuenta productos que ya tuvieron una retirada de stock por vencimiento.
+    # Se cuentan productos distintos para no inflar el indicador si hay más de un movimiento.
+    cursor.execute(
+        """
+        SELECT COUNT(DISTINCT id_producto)
+        FROM movimientos
+        WHERE lower(tipo) = 'vencido'
+        """
+    )
+    retirados_por_vencimiento = cursor.fetchone()[0]
+
     conn.close()
 
     return {
@@ -899,6 +910,7 @@ def obtener_metricas_dashboard():
         "stock_bajo": stock_bajo,
         "por_vencer": por_vencer,
         "vencidos": vencidos,
+        "retirados_por_vencimiento": retirados_por_vencimiento,
     }
 
 
