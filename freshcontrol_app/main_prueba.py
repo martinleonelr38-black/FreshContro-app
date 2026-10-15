@@ -2064,7 +2064,7 @@ class PantallaPanelGerente(MDScreen):
     retirados_por_vencimiento = NumericProperty(0)
     unidades_retiradas_vencimiento = NumericProperty(0)
     notificaciones_vencidos = NumericProperty(0)
-    resumen_vencimiento = StringProperty("No hay productos por vencer en los próximos 7 días.")
+    resumen_vencimiento = StringProperty("No hay productos vencidos ni próximos a vencer en los próximos 7 días.")
     resumen_alertas = StringProperty("No hay alertas críticas.")
     resumen_movimientos = StringProperty("Todavía no hay movimientos registrados.")
     resumen_categorias = StringProperty("No hay categorías cargadas.")
@@ -2149,7 +2149,7 @@ class PantallaPanelGerente(MDScreen):
         if vencimientos:
             self.resumen_vencimiento = "\n".join(vencimientos[:5])
         else:
-            self.resumen_vencimiento = "No hay productos por vencer en los próximos 7 días."
+            self.resumen_vencimiento = "No hay productos vencidos ni próximos a vencer en los próximos 7 días."
 
         if resumen_criticas:
             self.resumen_alertas = "\n".join(resumen_criticas[:5])
