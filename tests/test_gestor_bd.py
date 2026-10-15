@@ -374,6 +374,46 @@ class TestGestorBD(unittest.TestCase):
         self.assertTrue(any("salida" in mensaje.lower() for mensaje in mensajes))
         self.assertTrue(any("vencimiento" in mensaje.lower() for mensaje in mensajes))
         self.assertTrue(all("movimiento #" in mensaje for mensaje in mensajes))
+        self.assertTrue(any(
+            "Producto vencido de prueba" in alerta[4]
+            and "4 unidad(es) por vencimiento" in alerta[4]
+            and not bool(alerta[6])
+            for alerta in reducciones
+        ))
+
+        # El resumen de gerente debe mostrar el producto y la cantidad retirada.
+        notificaciones_gerente = self.gestor.obtener_notificaciones_gerente()
+        self.assertTrue(any(
+            tipo == "Stock reducido"
+            and "Producto vencido de prueba" in detalle
+            and "4 unidad(es)" in detalle
+            for tipo, detalle, _categoria, _stock, _fecha in notificaciones_gerente
+        ))
+
+    def test_metricas_cuentan_productos_y_unidades_retiradas_por_vencimiento(self):
+        self.gestor.ejecutar_comando(
+            """
+            INSERT INTO productos
+                (codigo_barras, nombre, categoria, cantidad_stock, fecha_vencimiento)
+            VALUES (?, ?, ?, ?, ?)
+            """,
+            ("EXP-METRICA", "Manzana vencida", "Frutas", 7, "2000-01-01"),
+        )
+        id_producto = self.gestor.ejecutar_consulta(
+            "SELECT id_producto FROM productos WHERE codigo_barras = ?",
+            ("EXP-METRICA",),
+        )[0][0]
+        self.assertEqual(self.gestor.retirar_stock_vencido(id_producto, 1), 1)
+
+        ruta_anterior = gestor_bd_mod.DB_PATH
+        gestor_bd_mod.DB_PATH = self.db_path
+        try:
+            metricas = gestor_bd_mod.obtener_metricas_dashboard()
+        finally:
+            gestor_bd_mod.DB_PATH = ruta_anterior
+
+        self.assertEqual(metricas["retirados_por_vencimiento"], 1)
+        self.assertEqual(metricas["unidades_retiradas_vencimiento"], 7)
 
     def test_inicializacion_elimina_legacy_y_conserva_movimientos(self):
         conn = sqlite3.connect(self.db_path)
