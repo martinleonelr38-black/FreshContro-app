@@ -325,15 +325,20 @@ class GestorBD:
             notificaciones.append(("Stock bajo", f"{nombre} ({categoria}) tiene {stock} unidades disponibles", categoria, stock, "-"))
 
         cursor.execute(
-            """SELECT p.nombre, p.categoria, p.cantidad_stock, m.cantidad, m.fecha_hora
+            """SELECT p.nombre, p.categoria, p.cantidad_stock, m.cantidad,
+                      m.fecha_hora, lower(m.tipo), COALESCE(m.detalle, '')
                FROM movimientos m JOIN productos p ON p.id_producto = m.id_producto
-               WHERE lower(m.tipo) = 'salida'
+               WHERE lower(m.tipo) IN ('salida', 'vencido')
                ORDER BY m.id_movimiento DESC LIMIT 10"""
         )
-        for nombre, categoria, stock, cantidad, fecha in cursor.fetchall():
+        for nombre, categoria, stock, cantidad, fecha, tipo_movimiento, detalle_movimiento in cursor.fetchall():
+            if tipo_movimiento == "vencido":
+                detalle = f"{nombre}: retiro de {cantidad} unidad(es) por vencimiento; quedan {stock} ({fecha})"
+            else:
+                detalle = f"{nombre}: salida de {cantidad} unidad(es); quedan {stock} ({fecha})"
             notificaciones.append((
                 "Stock reducido",
-                f"{nombre}: salida de {cantidad} unidad(es); quedan {stock} ({fecha})",
+                detalle,
                 categoria,
                 stock,
                 fecha,
@@ -376,17 +381,22 @@ class GestorBD:
 
             salidas_recientes = cursor.execute(
                 """
-                SELECT p.id_producto, p.nombre, m.cantidad
+                SELECT p.id_producto, p.nombre, m.cantidad, lower(m.tipo)
                 FROM movimientos m
                 JOIN productos p ON p.id_producto = m.id_producto
-                WHERE lower(m.tipo) = 'salida'
+                WHERE lower(m.tipo) IN ('salida', 'vencido')
                 ORDER BY m.id_movimiento DESC
                 LIMIT 10
                 """
             ).fetchall()
-            for id_producto, nombre, cantidad in salidas_recientes:
+            for id_producto, nombre, cantidad, tipo_movimiento in salidas_recientes:
                 tipo = "Stock reducido"
-                avisos.append((id_producto, tipo, f"{nombre}: salida de {cantidad} unidad(es)"))
+                detalle = (
+                    f"{nombre}: retiro de {cantidad} unidad(es) por vencimiento"
+                    if tipo_movimiento == "vencido"
+                    else f"{nombre}: salida de {cantidad} unidad(es)"
+                )
+                avisos.append((id_producto, tipo, detalle))
 
             for id_producto, tipo, mensaje in avisos:
                 existe = cursor.execute(
