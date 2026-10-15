@@ -596,8 +596,8 @@
                                         theme_text_color: "Custom"
                                         text_color: (1, 0.82, 0.82, 1) if app.theme_cls.theme_style == "Dark" else (0.65, 0.05, 0.05, 1)
                                 MDLabel:
-                                    text: "Requieren acción"
-                                    font_style: "Caption"
+                                    text: "Retirados: " + str(root.retirados_por_vencimiento) + " prod. / " + str(root.unidades_retiradas_vencimiento) + " u."
+                                    font_size: "9sp"
                                     theme_text_color: "Hint"
 
                     # TARJETA DESTACADA: REPORTES, GRÁFICOS Y PROVEEDORES
