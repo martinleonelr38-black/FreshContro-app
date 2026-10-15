@@ -340,21 +340,16 @@ class GestorBD:
             """SELECT p.nombre, p.categoria, p.cantidad_stock, m.cantidad,
                       m.fecha_hora, lower(m.tipo)
                FROM movimientos m JOIN productos p ON p.id_producto = m.id_producto
-               WHERE lower(m.tipo) IN ('entrada', 'salida', 'vencido')
+               WHERE lower(m.tipo) IN ('salida', 'vencido')
                ORDER BY m.id_movimiento DESC LIMIT 10"""
         )
         for nombre, categoria, stock, cantidad, fecha, tipo_movimiento in cursor.fetchall():
             if tipo_movimiento == "vencido":
-                tipo_aviso = "Stock reducido"
                 detalle = f"{nombre}: retiro de {cantidad} unidad(es) por vencimiento; quedan {stock} ({fecha})"
-            elif tipo_movimiento == "salida":
-                tipo_aviso = "Stock reducido"
-                detalle = f"{nombre}: salida de {cantidad} unidad(es); quedan {stock} ({fecha})"
             else:
-                tipo_aviso = "Movimiento de stock"
-                detalle = f"{nombre}: entrada de {cantidad} unidad(es); stock actual {stock} ({fecha})"
+                detalle = f"{nombre}: salida de {cantidad} unidad(es); quedan {stock} ({fecha})"
             notificaciones.append((
-                tipo_aviso,
+                "Stock reducido",
                 detalle,
                 categoria,
                 stock,
