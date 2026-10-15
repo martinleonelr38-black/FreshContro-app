@@ -366,7 +366,11 @@ class GestorBD:
             ).fetchall()
             for id_producto, nombre, vencimiento in productos_por_vencer:
                 tipo = "Vencimiento"
-                avisos.append((id_producto, tipo, f"{nombre} vence el {vencimiento}"))
+                if str(vencimiento)[:10] < fecha_generada:
+                    mensaje = f"{nombre} está vencido desde el {vencimiento}"
+                else:
+                    mensaje = f"{nombre} vence el {vencimiento}"
+                avisos.append((id_producto, tipo, mensaje))
 
             productos_stock_bajo = cursor.execute(
                 """
@@ -903,6 +907,15 @@ def obtener_metricas_dashboard():
     )
     retirados_por_vencimiento = cursor.fetchone()[0]
 
+    cursor.execute(
+        """
+        SELECT COALESCE(SUM(cantidad), 0)
+        FROM movimientos
+        WHERE lower(tipo) = 'vencido'
+        """
+    )
+    unidades_retiradas_vencimiento = cursor.fetchone()[0]
+
     conn.close()
 
     return {
@@ -911,6 +924,7 @@ def obtener_metricas_dashboard():
         "por_vencer": por_vencer,
         "vencidos": vencidos,
         "retirados_por_vencimiento": retirados_por_vencimiento,
+        "unidades_retiradas_vencimiento": unidades_retiradas_vencimiento,
     }
 
 
