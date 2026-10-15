@@ -1481,8 +1481,11 @@ class PantallaPanelEmpleado(MDScreen):
     unidades_retiradas_vencimiento = NumericProperty(0)
     notificaciones_vencidos = NumericProperty(0)
     _evento_reloj = None
+    _evento_actualizacion_notificaciones = None
 
     def on_pre_enter(self, *args):
+        from kivy.clock import Clock
+
         app = MDApp.get_running_app()
         if app.usuario_activo:
             nombre_completo = f"{app.usuario_activo.get('nombre', '')} {app.usuario_activo.get('apellido', '')}".strip()
@@ -1491,11 +1494,13 @@ class PantallaPanelEmpleado(MDScreen):
         
         self.actualizar_fecha_hora()
         if self._evento_reloj is None:
-            from kivy.clock import Clock
-
             self._evento_reloj = Clock.schedule_interval(self.actualizar_fecha_hora, 1)
         self.actualizar_metricas()
         self.actualizar_resumenes()
+        if self._evento_actualizacion_notificaciones is None:
+            self._evento_actualizacion_notificaciones = Clock.schedule_interval(
+                self.actualizar_notificaciones, 15
+            )
         # Aplicar el tema después de que KV y los widgets dinámicos estén visibles.
         # Esto evita que el texto del panel empleado quede blanco sobre superficies claras.
         Clock.schedule_once(
@@ -1507,6 +1512,14 @@ class PantallaPanelEmpleado(MDScreen):
         if self._evento_reloj is not None:
             self._evento_reloj.cancel()
             self._evento_reloj = None
+        if self._evento_actualizacion_notificaciones is not None:
+            self._evento_actualizacion_notificaciones.cancel()
+            self._evento_actualizacion_notificaciones = None
+
+    def actualizar_notificaciones(self, *_args):
+        """Refresca alertas y contador mientras el panel permanece visible."""
+        self.actualizar_metricas()
+        self.actualizar_resumenes()
 
     def actualizar_fecha_hora(self, *_args):
         ahora = datetime.now()
@@ -2056,8 +2069,11 @@ class PantallaPanelGerente(MDScreen):
     resumen_movimientos = StringProperty("Todavía no hay movimientos registrados.")
     resumen_categorias = StringProperty("No hay categorías cargadas.")
     _evento_reloj = None
+    _evento_actualizacion_notificaciones = None
 
     def on_pre_enter(self, *args):
+        from kivy.clock import Clock
+
         app = MDApp.get_running_app()
         if app.usuario_activo:
             nombre_completo = f"{app.usuario_activo.get('nombre', '')} {app.usuario_activo.get('apellido', '')}".strip()
@@ -2066,12 +2082,14 @@ class PantallaPanelGerente(MDScreen):
 
         self.actualizar_fecha_hora()
         if self._evento_reloj is None:
-            from kivy.clock import Clock
-
             self._evento_reloj = Clock.schedule_interval(self.actualizar_fecha_hora, 1)
 
         self.actualizar_metricas()
         self.actualizar_resumenes()
+        if self._evento_actualizacion_notificaciones is None:
+            self._evento_actualizacion_notificaciones = Clock.schedule_interval(
+                self.actualizar_notificaciones, 15
+            )
         # Reaplicar también en gerente para mantener el contraste consistente.
         Clock.schedule_once(
             lambda _dt: aplicar_contraste_vistas(MDApp.get_running_app().theme_cls.theme_style),
@@ -2082,6 +2100,14 @@ class PantallaPanelGerente(MDScreen):
         if self._evento_reloj is not None:
             self._evento_reloj.cancel()
             self._evento_reloj = None
+        if self._evento_actualizacion_notificaciones is not None:
+            self._evento_actualizacion_notificaciones.cancel()
+            self._evento_actualizacion_notificaciones = None
+
+    def actualizar_notificaciones(self, *_args):
+        """Refresca alertas y contador mientras el panel permanece visible."""
+        self.actualizar_metricas()
+        self.actualizar_resumenes()
 
     def actualizar_fecha_hora(self, *_args):
         ahora = datetime.now()
