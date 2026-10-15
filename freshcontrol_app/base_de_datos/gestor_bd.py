@@ -911,15 +911,20 @@ def obtener_metricas_dashboard():
     cursor.execute(
         """
         SELECT COALESCE(COUNT(*), 0) FROM productos
-        WHERE fecha_vencimiento BETWEEN DATE('now') AND DATE('now', '+7 days')
+        WHERE date(fecha_vencimiento) > date('now')
+            AND date(fecha_vencimiento) <= date('now', '+7 days')
         """
     )
     por_vencer = cursor.fetchone()[0]
 
+    # Cuenta como vencido todo producto cuya fecha sea hoy o anterior
+    # y que todavía conserve unidades en inventario.
     cursor.execute(
-        """
+        f"""
         SELECT COALESCE(COUNT(*), 0) FROM productos
-        WHERE fecha_vencimiento < DATE('now')
+        WHERE fecha_vencimiento IS NOT NULL
+            AND date(fecha_vencimiento) <= date('now')
+            AND COALESCE({stock_col}, 0) > 0
         """
     )
     vencidos = cursor.fetchone()[0]
