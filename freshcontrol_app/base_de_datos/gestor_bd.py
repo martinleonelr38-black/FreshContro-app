@@ -326,12 +326,12 @@ class GestorBD:
 
         cursor.execute(
             """SELECT p.nombre, p.categoria, p.cantidad_stock, m.cantidad,
-                      m.fecha_hora, lower(m.tipo), COALESCE(m.detalle, '')
+                      m.fecha_hora, lower(m.tipo)
                FROM movimientos m JOIN productos p ON p.id_producto = m.id_producto
                WHERE lower(m.tipo) IN ('salida', 'vencido')
                ORDER BY m.id_movimiento DESC LIMIT 10"""
         )
-        for nombre, categoria, stock, cantidad, fecha, tipo_movimiento, detalle_movimiento in cursor.fetchall():
+        for nombre, categoria, stock, cantidad, fecha, tipo_movimiento in cursor.fetchall():
             if tipo_movimiento == "vencido":
                 detalle = f"{nombre}: retiro de {cantidad} unidad(es) por vencimiento; quedan {stock} ({fecha})"
             else:
@@ -381,7 +381,7 @@ class GestorBD:
 
             salidas_recientes = cursor.execute(
                 """
-                SELECT p.id_producto, p.nombre, m.cantidad, lower(m.tipo)
+                SELECT m.id_movimiento, p.id_producto, p.nombre, m.cantidad, lower(m.tipo)
                 FROM movimientos m
                 JOIN productos p ON p.id_producto = m.id_producto
                 WHERE lower(m.tipo) IN ('salida', 'vencido')
@@ -389,25 +389,36 @@ class GestorBD:
                 LIMIT 10
                 """
             ).fetchall()
-            for id_producto, nombre, cantidad, tipo_movimiento in salidas_recientes:
+            for id_movimiento, id_producto, nombre, cantidad, tipo_movimiento in salidas_recientes:
                 tipo = "Stock reducido"
                 detalle = (
                     f"{nombre}: retiro de {cantidad} unidad(es) por vencimiento"
                     if tipo_movimiento == "vencido"
                     else f"{nombre}: salida de {cantidad} unidad(es)"
                 )
-                avisos.append((id_producto, tipo, detalle))
+                avisos.append((id_producto, tipo, f"{detalle} · movimiento #{id_movimiento}"))
 
             for id_producto, tipo, mensaje in avisos:
-                existe = cursor.execute(
-                    """
-                    SELECT 1 FROM alertas
-                    WHERE id_producto = ? AND tipo_alerta = ? AND mensaje = ?
-                        AND fecha_generada = ?
-                    LIMIT 1
-                    """,
-                    (id_producto, tipo, mensaje, fecha_generada),
-                ).fetchone()
+                if tipo == "Stock reducido":
+                    # Cada movimiento genera una sola alerta, aunque se abra el panel en otro día.
+                    existe = cursor.execute(
+                        """
+                        SELECT 1 FROM alertas
+                        WHERE id_producto = ? AND tipo_alerta = ? AND mensaje = ?
+                        LIMIT 1
+                        """,
+                        (id_producto, tipo, mensaje),
+                    ).fetchone()
+                else:
+                    existe = cursor.execute(
+                        """
+                        SELECT 1 FROM alertas
+                        WHERE id_producto = ? AND tipo_alerta = ? AND mensaje = ?
+                            AND fecha_generada = ?
+                        LIMIT 1
+                        """,
+                        (id_producto, tipo, mensaje, fecha_generada),
+                    ).fetchone()
                 if not existe:
                     cursor.execute(
                         """
