@@ -1730,6 +1730,51 @@ class PantallaPanelEmpleado(MDScreen):
     def mostrar_historial(self):
         mostrar_movimientos_visual("Historial de movimientos")
 
+    def ver_alertas(self):
+        """Muestra las alertas del inventario desde el panel del empleado."""
+        gestor = GestorBD()
+        gestor.sincronizar_alertas(30)
+        alertas = gestor.listar_alertas()
+        contenido = BoxLayout(orientation="vertical", spacing=dp(8), padding=dp(10), size_hint_y=None)
+        contenido.bind(minimum_height=contenido.setter("height"))
+
+        if not alertas:
+            contenido.add_widget(MDLabel(
+                text="No hay productos vencidos, próximos a vencer ni con stock bajo.",
+                size_hint_y=None,
+                height=dp(48),
+            ))
+
+        for id_alerta, _id_producto, nombre, tipo, mensaje, fecha, leido in alertas:
+            fila = BoxLayout(orientation="horizontal", spacing=dp(8), size_hint_y=None, height=dp(64))
+            fila.add_widget(MDLabel(
+                text=f"{tipo} · {nombre}\n{mensaje} · {fecha}",
+                valign="middle",
+            ))
+            if not leido:
+                fila.add_widget(MDFlatButton(
+                    text="Marcar leída",
+                    size_hint_x=None,
+                    width=dp(112),
+                    on_release=lambda _button, alerta_id=id_alerta: (
+                        gestor.marcar_alerta_leida(alerta_id),
+                        dialog.dismiss(),
+                        self.actualizar_metricas(),
+                        self.ver_alertas(),
+                    ),
+                ))
+            contenido.add_widget(fila)
+
+        scroll = ScrollView(size_hint_y=None, height=min(dp(430), dp(64 * max(len(alertas), 1))))
+        scroll.add_widget(contenido)
+        dialog = MDDialog(
+            title="Notificaciones del inventario",
+            type="custom",
+            content_cls=scroll,
+            buttons=[MDFlatButton(text="Cerrar", on_release=lambda _button: dialog.dismiss())],
+        )
+        dialog.open()
+
     def actualizar_resumenes(self):
         gestor = GestorBD()
         movimientos = gestor.listar_movimientos(5)
@@ -1786,7 +1831,10 @@ class PantallaPanelEmpleado(MDScreen):
             self.stock_bajo = metricas.get("stock_bajo", 0)
             self.por_vencer = metricas.get("por_vencer", 0)
             self.vencidos = metricas.get("vencidos", 0)
-            self.notificaciones_vencidos = int(self.vencidos or 0)
+            gestor = GestorBD()
+            gestor.sincronizar_alertas(30)
+            alertas_pendientes = gestor.listar_alertas(1000)
+            self.notificaciones_vencidos = sum(1 for alerta in alertas_pendientes if not bool(alerta[6]))
         except Exception as e:
             print(f"Error cargando métricas en panel empleado: {e}")
 
@@ -2042,7 +2090,10 @@ class PantallaPanelGerente(MDScreen):
             self.stock_bajo = metricas.get("stock_bajo", 0)
             self.por_vencer = metricas.get("por_vencer", 0)
             self.vencidos = metricas.get("vencidos", 0)
-            self.notificaciones_vencidos = int(self.vencidos or 0)
+            gestor = GestorBD()
+            gestor.sincronizar_alertas(30)
+            alertas_pendientes = gestor.listar_alertas(1000)
+            self.notificaciones_vencidos = sum(1 for alerta in alertas_pendientes if not bool(alerta[6]))
         except Exception as e:
             print(f"Error cargando métricas en panel gerente: {e}")
 
@@ -2056,14 +2107,18 @@ class PantallaPanelGerente(MDScreen):
         criticas = [
             detalle for tipo, detalle, _, _, _ in alertas if tipo == "Stock bajo"
         ]
+        stock_reducido = [
+            detalle for tipo, detalle, _, _, _ in alertas if tipo == "Stock reducido"
+        ]
+        resumen_criticas = criticas + [f"Stock reducido: {detalle}" for detalle in stock_reducido]
 
         if vencimientos:
             self.resumen_vencimiento = "\n".join(vencimientos[:5])
         else:
             self.resumen_vencimiento = "No hay productos por vencer en los próximos 7 días."
 
-        if criticas:
-            self.resumen_alertas = "\n".join(criticas[:5])
+        if resumen_criticas:
+            self.resumen_alertas = "\n".join(resumen_criticas[:5])
         else:
             self.resumen_alertas = "No hay alertas críticas."
 
