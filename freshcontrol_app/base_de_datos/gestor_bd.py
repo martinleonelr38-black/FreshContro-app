@@ -320,9 +320,12 @@ class GestorBD:
             fecha_prod = date.fromisoformat(fecha)
             dias_restantes = (fecha_prod - fecha_hoy).days
             if dias_restantes < 0:
-                detalle = f"{nombre} vencido hace {abs(dias_restantes)} días"
+                detalle = (
+                    f"{nombre} vencido hace {abs(dias_restantes)} días; "
+                    f"quedan {stock} unidad(es) en stock"
+                )
             else:
-                detalle = f"{nombre} vence en {dias_restantes} días"
+                detalle = f"{nombre} vence en {dias_restantes} días; stock: {stock} unidad(es)"
             notificaciones.append(("Vencimiento", detalle, categoria, stock, fecha))
 
         cursor.execute(
