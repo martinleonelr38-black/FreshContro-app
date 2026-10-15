@@ -423,6 +423,12 @@ class TestGestorBD(unittest.TestCase):
         finally:
             gestor_bd_mod.DB_PATH = ruta_anterior
 
+        # Evita que el producto de ejemplo de setUp entre en el lote de retiro.
+        self.gestor.ejecutar_comando(
+            "UPDATE productos SET fecha_vencimiento = ? WHERE id_producto = 1",
+            ("2099-01-01",),
+        )
+
         for indice in range(12):
             codigo = f"EXP-LOTE-{indice}"
             self.gestor.ejecutar_comando(
