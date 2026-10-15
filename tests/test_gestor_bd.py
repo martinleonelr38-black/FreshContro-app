@@ -415,6 +415,42 @@ class TestGestorBD(unittest.TestCase):
         self.assertEqual(metricas["retirados_por_vencimiento"], 1)
         self.assertEqual(metricas["unidades_retiradas_vencimiento"], 7)
 
+    def test_notifica_todos_los_productos_retirados_en_un_lote_mayor_a_diez(self):
+        ruta_anterior = gestor_bd_mod.DB_PATH
+        gestor_bd_mod.DB_PATH = self.db_path
+        try:
+            gestor_bd_mod.inicializar_bd()
+        finally:
+            gestor_bd_mod.DB_PATH = ruta_anterior
+
+        for indice in range(12):
+            codigo = f"EXP-LOTE-{indice}"
+            self.gestor.ejecutar_comando(
+                """
+                INSERT INTO productos
+                    (codigo_barras, nombre, categoria, cantidad_stock, fecha_vencimiento)
+                VALUES (?, ?, ?, ?, ?)
+                """,
+                (codigo, f"Producto vencido {indice}", "General", indice + 1, "2000-01-01"),
+            )
+
+        self.assertEqual(self.gestor.retirar_stock_vencido(), 12)
+        self.gestor.sincronizar_alertas()
+        self.gestor.sincronizar_alertas()
+
+        reducciones = [
+            alerta for alerta in self.gestor.listar_alertas(1000)
+            if alerta[3] == "Stock reducido"
+        ]
+        self.assertEqual(len(reducciones), 12)
+        mensajes = [alerta[4] for alerta in reducciones]
+        for indice in range(12):
+            self.assertTrue(any(
+                f"Producto vencido {indice}" in mensaje
+                and "por vencimiento" in mensaje.lower()
+                for mensaje in mensajes
+            ))
+
     def test_inicializacion_elimina_legacy_y_conserva_movimientos(self):
         conn = sqlite3.connect(self.db_path)
         conn.execute(
