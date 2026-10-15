@@ -1735,7 +1735,7 @@ class PantallaPanelEmpleado(MDScreen):
     def ver_alertas(self):
         """Muestra las alertas del inventario desde el panel del empleado."""
         gestor = GestorBD()
-        gestor.sincronizar_alertas(30)
+        self.actualizar_metricas()
         alertas = gestor.listar_alertas()
         contenido = BoxLayout(orientation="vertical", spacing=dp(8), padding=dp(10), size_hint_y=None)
         contenido.bind(minimum_height=contenido.setter("height"))
@@ -2242,7 +2242,7 @@ class PantallaPanelGerente(MDScreen):
 
     def ver_alertas(self):
         gestor = GestorBD()
-        gestor.sincronizar_alertas(30)
+        self.actualizar_metricas()
         alertas = gestor.listar_alertas()
         contenido = BoxLayout(orientation="vertical", spacing=dp(8), padding=dp(10), size_hint_y=None)
         contenido.bind(minimum_height=contenido.setter("height"))
