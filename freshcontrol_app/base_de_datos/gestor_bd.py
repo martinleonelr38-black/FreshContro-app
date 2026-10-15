@@ -394,7 +394,7 @@ class GestorBD:
                         FROM alertas a
                         WHERE a.id_producto = p.id_producto
                             AND a.tipo_alerta = 'Stock reducido'
-                            AND instr(a.mensaje, 'movimiento #' || m.id_movimiento) > 0
+                            AND a.mensaje LIKE ('%movimiento #' || m.id_movimiento)
                     )
                 ORDER BY m.id_movimiento DESC
                 """
