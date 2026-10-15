@@ -389,8 +389,14 @@ class GestorBD:
                 FROM movimientos m
                 JOIN productos p ON p.id_producto = m.id_producto
                 WHERE lower(m.tipo) IN ('salida', 'vencido')
+                    AND NOT EXISTS (
+                        SELECT 1
+                        FROM alertas a
+                        WHERE a.id_producto = p.id_producto
+                            AND a.tipo_alerta = 'Stock reducido'
+                            AND instr(a.mensaje, 'movimiento #' || m.id_movimiento) > 0
+                    )
                 ORDER BY m.id_movimiento DESC
-                LIMIT 10
                 """
             ).fetchall()
             for id_movimiento, id_producto, nombre, cantidad, tipo_movimiento in salidas_recientes:
