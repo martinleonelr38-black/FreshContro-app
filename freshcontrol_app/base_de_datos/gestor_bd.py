@@ -179,6 +179,12 @@ class GestorBD:
 
             conn.commit()
             conn.close()
+            # Publicar la alerta inmediatamente para que ambos paneles la reciban
+            # sin depender de que el usuario abra la pantalla de notificaciones.
+            try:
+                self.sincronizar_alertas(30)
+            except Exception as error_alerta:
+                print(f"Movimiento guardado, pero no se pudo sincronizar la alerta: {error_alerta}")
             return True, "Movimiento registrado y stock actualizado"
         except Exception as e:
             return False, f"Error al registrar movimiento: {e}"
@@ -282,6 +288,12 @@ class GestorBD:
             cantidad_retirada = cursor.rowcount
 
             conn.commit()
+            # El movimiento de tipo "vencido" queda guardado en alertas
+            # de inmediato; el empleado y el gerente comparten esta bandeja.
+            try:
+                self.sincronizar_alertas(30)
+            except Exception as error_alerta:
+                print(f"Retiro por vencimiento guardado, pero no se pudo sincronizar la alerta: {error_alerta}")
             return cantidad_retirada
         except Exception:
             conn.rollback()
